@@ -1,0 +1,15 @@
+@startuml Context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Component Diagram for Churros Financial System - API Application
+
+Person(user, "User", "Company that want to manage your finance")
+Container(spa, "SPA", "ReactJS", "The main interface that the user interacts", $tags="v0.1")
+Container(apiUserMicroservice, "User MicroService", "Fastapi/Python", "Handles all business logic", $tags="v0.1")
+ContainerDb(dbUserMicroservice, "Database User Microservice", "PostgreSQL", "Holds user data")
+
+Rel(user, spa, "Uses", "http/https")
+Rel(spa, apiUserMicroservice, "Uses", "https/graphQL")
+Rel_R(apiUserMicroservice, dbUserMicroservice, "Reads/Writes")
+
+@enduml
