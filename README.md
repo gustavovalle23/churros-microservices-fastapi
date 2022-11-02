@@ -17,7 +17,8 @@ pip install -r requirements.txt
 
 ### Start the local server (will be available at http://127.0.0.1:8000 or localhost:8000)
 ```
-python manage.py runserver
+cp .env.example .env
+uvicorn main:app --reload
 ```
 
 ### Run tests
