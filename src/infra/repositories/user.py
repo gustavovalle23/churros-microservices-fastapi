@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 import random
 import string
-from typing import Optional
 from uuid import uuid1 as uuid
 from sqlalchemy.orm import Session, Query
 
 from src.domain.user import User
-from src.infra.database import UserModel, engine
+from src.infra.database import UserModel
 from src.application.dtos.user import CreateUserInput, UpdateUserInput
 
 

@@ -161,7 +161,7 @@ def test_update_user_with_invalid_email():
     assert error.get("type") == "value_error"
 
 
-def test_update_user_with_already_register_email():
+def test_update_user_with_already_registered_email():
     data = json.dumps(
         {
             "id": "111111111111111111111111",
