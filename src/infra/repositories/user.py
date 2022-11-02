@@ -10,7 +10,10 @@ from src.infra.database import UserModel
 from src.application.dtos.user import CreateUserInput, UpdateUserInput
 
 
-def to_entity(model: Query | UserModel) -> User:
+def to_entity(model: Query | UserModel) -> User | None:
+    if not model:
+        return
+
     return User(
         model.id,
         model.name,
@@ -34,7 +37,7 @@ def find_by_email(db: Session, email: str) -> User | None:
     return to_entity(user)
 
 
-def find_by_id(db: Session, user_id: int) -> User | None:
+def find_by_id(db: Session, user_id: str) -> User | None:
     user = (
         db.query(UserModel)
         .filter(UserModel.id == user_id)

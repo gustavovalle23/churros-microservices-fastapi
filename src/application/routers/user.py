@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import bcrypt
-from typing import Tuple
+from typing import Tuple, Optional
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, status
 
@@ -20,9 +20,11 @@ async def find_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_d
 
 
 @router.get("/users/{user_id}", tags=["users"])
-async def find_user(user_id: int, db: Session = Depends(get_db)):
-    user: User = user_repository.find_by_id(db, user_id)
-    return user
+async def find_user(user_id: str, db: Session = Depends(get_db)):
+    user: Optional[User] = user_repository.find_by_id(db, user_id)
+    if not user:
+        return {"error": "User Not Found"}
+    return {"user": user}
 
 
 @router.post("/users", tags=["users"], status_code=status.HTTP_201_CREATED)
