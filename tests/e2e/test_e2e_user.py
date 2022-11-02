@@ -15,6 +15,21 @@ def run_around_tests():
     UserSeed.remove_all()
 
 
-def test_find_user_by_id():
+def test_find_all_users_without_pagination():
     response = client.get("/users")
-    assert len(response.json().get("users")) == 2
+    assert len(response.json().get("users")) == 10
+
+
+def test_find_all_users_with_limit_pagination():
+    response = client.get("/users?limit=15")
+    assert len(response.json().get("users")) == 15
+
+
+def test_find_all_users_with_offset_pagination():
+    response = client.get("/users?skip=8")
+    assert len(response.json().get("users")) == 7
+
+
+def test_find_all_users_with_limit_and_offset_pagination():
+    response = client.get("/users?skip=2&limit=15")
+    assert len(response.json().get("users")) == 13
