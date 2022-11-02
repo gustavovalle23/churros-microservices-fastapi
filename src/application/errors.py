@@ -14,3 +14,17 @@ class UserNotFound:
                 }
             ],
         )
+
+
+class EmailAlreadyRegistered:
+    def __init__(self) -> None:
+        raise HTTPException(
+            status.HTTP_412_PRECONDITION_FAILED,
+            [
+                {
+                    "loc": ["param", "email"],
+                    "msg": "Email already registered",
+                    "type": "already_registered_error",
+                }
+            ],
+        )

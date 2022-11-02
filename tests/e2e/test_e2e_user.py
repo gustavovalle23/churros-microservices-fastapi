@@ -114,3 +114,64 @@ def test_inactivate_user_with_an_invalid_userid():
     assert "user_id" in error.get("loc")
     assert error.get("msg") == "User not found"
     assert response.status_code == 404
+
+
+def test_update_user_with_valid_args():
+    data = json.dumps(
+        {
+            "id": "111111111111111111111111",
+            "name": "name_updated",
+            "email": "string_updated@gmail.com",
+            "password": "string",
+        }
+    )
+    response = client.patch("/users", data)
+    assert response.json().get("user", {}).get("name") == "name_updated"
+    assert response.json().get("user", {}).get("email") == "string_updated@gmail.com"
+
+
+def test_update_user_with_invalid_userid():
+    data = json.dumps(
+        {
+            "id": "111111111111111111111112",
+            "name": "name_updated",
+            "email": "string_updated@gmail.com",
+            "password": "string",
+        }
+    )
+    response = client.patch("/users", data)
+    error = response.json().get("detail")[0]
+    assert "user_id" in error.get("loc")
+    assert error.get("msg") == "User not found"
+    assert response.status_code == 404
+
+
+def test_update_user_with_invalid_email():
+    data = json.dumps(
+        {
+            "id": "111111111111111111111111",
+            "name": "name_updated",
+            "email": "admin@sqs",
+            "password": "string",
+        }
+    )
+    response = client.patch("/users", data)
+    error = response.json().get("detail")[0]
+    assert "email" in error.get("loc")
+    assert error.get("type") == "value_error"
+
+
+def test_update_user_with_already_register_email():
+    data = json.dumps(
+        {
+            "id": "111111111111111111111111",
+            "name": "name_updated",
+            "email": "admin1@gmail.com",
+            "password": "string",
+        }
+    )
+    response = client.patch("/users", data)
+    error = response.json().get("detail")[0]
+    assert "email" in error.get("loc")
+    assert error.get("msg") == "Email already registered"
+    assert error.get("type") == "already_registered_error"

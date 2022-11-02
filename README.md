@@ -25,3 +25,5 @@ uvicorn main:app --reload
 ```
 python -m pytest tests -s
 ```
+
+### Access docs at http://localhost:8000/docs or http://localhost:8000/redoc

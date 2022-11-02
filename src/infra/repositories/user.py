@@ -6,7 +6,7 @@ from uuid import uuid1 as uuid
 from sqlalchemy.orm import Session, Query
 
 from src.domain.user import User
-from src.infra.database import UserModel
+from src.infra.database import UserModel, engine
 from src.application.dtos.user import CreateUserInput, UpdateUserInput
 
 
@@ -33,7 +33,7 @@ def find_all(db: Session, skip: int = 0, limit: int = 100):
 
 
 def find_by_email(db: Session, email: str) -> User | None:
-    user: Optional[UserModel] = db.query(UserModel).where(UserModel.email == email)
+    user = db.query(UserModel).filter(UserModel.email == email).first()
     return to_entity(user)
 
 
@@ -47,7 +47,7 @@ def find_by_id(db: Session, user_id: str) -> User | None:
     return to_entity(user)
 
 
-def save(db: Session, input: CreateUserInput):
+def save(db: Session, input: CreateUserInput) -> User:
     user = UserModel(
         id=uuid().hex, name=input.name, email=input.email, password=input.password
     )
@@ -56,11 +56,13 @@ def save(db: Session, input: CreateUserInput):
     return to_entity(user)
 
 
-def update(db: Session, user_id: str, input: UpdateUserInput) -> None:
-    db.query(UserModel).filter(UserModel.id == user_id).update(
-        {"email": input.email, "active": input.active}
+def update(db: Session, input: UpdateUserInput) -> User:
+    db.query(UserModel).filter(UserModel.id == input.id).update(
+        {"email": input.email, "name": input.name}
     )
     db.commit()
+    updated_user = db.query(UserModel).filter(UserModel.id == input.id).first()
+    return to_entity(updated_user)
 
 
 def inactivate(db: Session, user_id: str) -> None:

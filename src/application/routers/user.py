@@ -8,7 +8,7 @@ from src.domain.user import User
 from src.infra.database import get_db
 from src.infra.repositories import user as user_repository
 from src.application.dtos.user import CreateUserInput, UpdateUserInput
-from src.application.errors import UserNotFound
+from src.application.errors import UserNotFound, EmailAlreadyRegistered
 
 
 router = APIRouter()
@@ -38,7 +38,6 @@ async def create_user(user: CreateUserInput, db: Session = Depends(get_db)):
 @router.post("/users/inactivate/{user_id}", tags=["users"])
 async def inactivate_user(user_id: str, db: Session = Depends(get_db)):
     user: Optional[User] = user_repository.find_by_id(db, user_id)
-
     if not user:
         return UserNotFound()
 
@@ -46,15 +45,24 @@ async def inactivate_user(user_id: str, db: Session = Depends(get_db)):
     return {"message": "inactivated"}
 
 
-@router.post("/users/{user_id}", tags=["users"])
-async def update_user(
-    user_id: int, user: UpdateUserInput, db: Session = Depends(get_db)
-):
-    user_repository.update(db, user_id, user)
-    return {"message": "updated"}
+@router.patch("/users", tags=["users"])
+async def update_user(input: UpdateUserInput, db: Session = Depends(get_db)):
+    user: Optional[User] = user_repository.find_by_id(db, input.id)
+    if not user:
+        return UserNotFound()
+
+    if user_repository.find_by_email(db, input.email):
+        return EmailAlreadyRegistered()
+
+    updated_user = user_repository.update(db, input)
+    return {"message": "updated", "user": updated_user}
 
 
 @router.delete("/users/{user_id}", tags=["users"])
 async def delete_user(user_id: int, db: Session = Depends(get_db)):
+    user: Optional[User] = user_repository.find_by_id(db, user_id)
+    if not user:
+        return UserNotFound()
+
     user_repository.delete(db, user_id)
     return {"message": "deleted"}
