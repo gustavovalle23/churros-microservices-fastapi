@@ -56,19 +56,19 @@ def save(db: Session, input: CreateUserInput):
     return to_entity(user)
 
 
-def update(db: Session, user_id: int, input: UpdateUserInput) -> None:
+def update(db: Session, user_id: str, input: UpdateUserInput) -> None:
     db.query(UserModel).filter(UserModel.id == user_id).update(
         {"email": input.email, "active": input.active}
     )
     db.commit()
 
 
-def inactivate(db: Session, user_id: int) -> None:
+def inactivate(db: Session, user_id: str) -> None:
     db.query(UserModel).filter(UserModel.id == user_id).update({"active": False})
     db.commit()
 
 
-def delete(db: Session, user_id: int) -> None:
+def delete(db: Session, user_id: str) -> None:
     db.query(UserModel).filter(UserModel.id == user_id).update(
         {"email": random_string(), "active": False, "password": random_string()}
     )

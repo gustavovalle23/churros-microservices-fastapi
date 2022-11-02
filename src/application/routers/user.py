@@ -8,6 +8,7 @@ from src.domain.user import User
 from src.infra.database import get_db
 from src.infra.repositories import user as user_repository
 from src.application.dtos.user import CreateUserInput, UpdateUserInput
+from src.application.errors import UserNotFound
 
 
 router = APIRouter()
@@ -23,7 +24,7 @@ async def find_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_d
 async def find_user(user_id: str, db: Session = Depends(get_db)):
     user: Optional[User] = user_repository.find_by_id(db, user_id)
     if not user:
-        return {"error": "User Not Found"}
+        return UserNotFound()
     return {"user": user}
 
 
@@ -35,7 +36,12 @@ async def create_user(user: CreateUserInput, db: Session = Depends(get_db)):
 
 
 @router.post("/users/inactivate/{user_id}", tags=["users"])
-async def inactivate_user(user_id: int, db: Session = Depends(get_db)):
+async def inactivate_user(user_id: str, db: Session = Depends(get_db)):
+    user: Optional[User] = user_repository.find_by_id(db, user_id)
+
+    if not user:
+        return UserNotFound()
+
     user_repository.inactivate(db, user_id)
     return {"message": "inactivated"}
 

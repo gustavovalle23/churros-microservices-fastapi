@@ -4,7 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from main import app
-from tests.seeds import UserSeed
+from tests.utils import UserSeed, Sqlite3
 from tests.mocks.user import users
 
 client = TestClient(app)
@@ -45,7 +45,10 @@ def test_find_user_by_id():
 
 def test_should_return_error_when_not_find_user_by_id():
     response = client.get("/users/111111111111111111111112")
-    assert response.json().get("error") == "User Not Found"
+    error = response.json().get("detail")[0]
+    assert "user_id" in error.get("loc")
+    assert error.get("msg") == "User not found"
+    assert response.status_code == 404
 
 
 def test_create_user_with_valid_args():
@@ -83,6 +86,7 @@ def test_create_user_with_missing_name():
     error = response.json().get("detail")[0]
     assert "name" in error.get("loc")
     assert error.get("type") == "value_error.missing"
+    assert response.status_code == 422
 
 
 def test_create_user_with_invalid_email():
@@ -91,3 +95,22 @@ def test_create_user_with_invalid_email():
     error = response.json().get("detail")[0]
     assert "email" in error.get("loc")
     assert error.get("type") == "value_error"
+
+
+def test_inactivate_user_with_a_valid_userid():
+    user = Sqlite3.find_by_id("111111111111111111111111")
+    assert user.active == True
+
+    response = client.post("/users/inactivate/111111111111111111111111")
+    assert response.json().get("message") == "inactivated"
+
+    user = Sqlite3.find_by_id("111111111111111111111111")
+    assert user.active == False
+
+
+def test_inactivate_user_with_an_invalid_userid():
+    response = client.post("/users/inactivate/111111111111111111111112")
+    error = response.json().get("detail")[0]
+    assert "user_id" in error.get("loc")
+    assert error.get("msg") == "User not found"
+    assert response.status_code == 404
