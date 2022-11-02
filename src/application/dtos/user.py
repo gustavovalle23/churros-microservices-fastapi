@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
+import re
+
+regex = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
 
 
 class CreateUserInput(BaseModel):
@@ -7,6 +10,13 @@ class CreateUserInput(BaseModel):
     email: str
     active: bool = True
     password: str
+
+    @validator("email")
+    @classmethod
+    def check_email(cls, value):
+        if not re.fullmatch(regex, value):
+            raise ValueError("Invalid e-mail")
+        return value
 
 
 class UpdateUserInput(BaseModel):

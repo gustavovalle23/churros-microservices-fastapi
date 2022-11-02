@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from fastapi.testclient import TestClient
+import json
 import pytest
+from fastapi.testclient import TestClient
 
 from main import app
 from tests.seeds import UserSeed
@@ -45,3 +46,48 @@ def test_find_user_by_id():
 def test_should_return_error_when_not_find_user_by_id():
     response = client.get("/users/111111111111111111111112")
     assert response.json().get("error") == "User Not Found"
+
+
+def test_create_user_with_valid_args():
+    data = json.dumps(
+        {"name": "string", "email": "string@gmail.com", "password": "string"}
+    )
+    response = client.post("/users", data)
+    assert response.json().get("user") is not None
+
+
+def test_create_user_with_missing_email():
+    data = json.dumps({"name": "string", "password": "string"})
+    response = client.post("/users", data)
+    error = response.json().get("detail")[0]
+    assert "email" in error.get("loc")
+    assert error.get("type") == "value_error.missing"
+
+
+def test_create_user_with_missing_password():
+    data = json.dumps(
+        {
+            "name": "string",
+            "email": "string@gmail.com",
+        }
+    )
+    response = client.post("/users", data)
+    error = response.json().get("detail")[0]
+    assert "password" in error.get("loc")
+    assert error.get("type") == "value_error.missing"
+
+
+def test_create_user_with_missing_name():
+    data = json.dumps({"email": "string@gmail.com", "password": "string"})
+    response = client.post("/users", data)
+    error = response.json().get("detail")[0]
+    assert "name" in error.get("loc")
+    assert error.get("type") == "value_error.missing"
+
+
+def test_create_user_with_invalid_email():
+    data = json.dumps({"name": "string", "email": "string", "password": "string"})
+    response = client.post("/users", data)
+    error = response.json().get("detail")[0]
+    assert "email" in error.get("loc")
+    assert error.get("type") == "value_error"
