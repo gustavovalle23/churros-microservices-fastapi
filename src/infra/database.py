@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from sqlalchemy import create_engine
-from dotenv import dotenv_values
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Integer, Column, String, Boolean, DateTime
 from datetime import datetime
+from sqlalchemy.sql import func
+from dotenv import dotenv_values
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Integer, Column, String, Boolean, DateTime
 
 envs = dotenv_values(".env")
 
@@ -31,10 +32,10 @@ class UserModel(Base):
     password: str = Column(String(255))
     active: bool = Column(Boolean(), default=True)
     created_at: datetime = Column(
-        DateTime(timezone=True), server_default=datetime.utcnow(), nullable=False
+        DateTime(timezone=True), server_default=func.now(), nullable=False
     )
     updated_at: datetime = Column(
         DateTime(timezone=True),
-        server_default=datetime.utcnow(),
-        onupdate=datetime.utcnow(),
+        server_default=func.now(),
+        onupdate=func.now(),
     )

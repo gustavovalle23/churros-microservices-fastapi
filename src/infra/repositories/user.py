@@ -2,24 +2,36 @@
 import random
 import string
 from typing import Optional
-from datetime import datetime
-from uuid import UUID as uuid
-from sqlalchemy.orm import Session
+from uuid import uuid1 as uuid
+from sqlalchemy.orm import Session, Query
 
-from domain.user import User
-from infra.database import UserModel
-from application.dtos.user import CreateUserInput, UpdateUserInput
+from src.domain.user import User
+from src.infra.database import UserModel
+from src.application.dtos.user import CreateUserInput, UpdateUserInput
+
+
+def to_entity(model: Query | UserModel) -> User:
+    return User(
+        model.id,
+        model.name,
+        model.email,
+        model.password,
+        model.active,
+        model.created_at,
+        model.updated_at,
+    )
 
 
 def find_all(db: Session, skip: int = 0, limit: int = 100):
-    return (
+    users = (
         db.query(UserModel).filter(UserModel.active == True).offset(skip).limit(limit)
     )
+    return tuple(map(to_entity, users))
 
 
 def find_by_email(db: Session, email: str) -> User | None:
     user: Optional[UserModel] = db.query(UserModel).where(UserModel.email == email)
-    return user
+    return to_entity(user)
 
 
 def find_by_id(db: Session, user_id: int) -> User | None:
@@ -29,16 +41,16 @@ def find_by_id(db: Session, user_id: int) -> User | None:
         .filter(UserModel.active == True)
         .first()
     )
-    return user
+    return to_entity(user)
 
 
 def save(db: Session, input: CreateUserInput):
     user = UserModel(
-        id=uuid(), name=input.name, email=input.email, password=input.password
+        id=uuid().hex, name=input.name, email=input.email, password=input.password
     )
     db.add(user)
     db.commit()
-    return user
+    return to_entity(user)
 
 
 def update(db: Session, user_id: int, input: UpdateUserInput) -> None:

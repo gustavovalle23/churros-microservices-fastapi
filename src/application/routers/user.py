@@ -4,10 +4,10 @@ from typing import Tuple
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, status
 
-from domain.user import User
-from infra.database import get_db
-from infra.repositories import user as user_repository
-from application.dtos.user import CreateUserInput, UpdateUserInput
+from src.domain.user import User
+from src.infra.database import get_db
+from src.infra.repositories import user as user_repository
+from src.application.dtos.user import CreateUserInput, UpdateUserInput
 
 
 router = APIRouter()
@@ -16,7 +16,7 @@ router = APIRouter()
 @router.get("/users", tags=["users"])
 async def find_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     users: Tuple[User] = user_repository.find_all(db, skip, limit)
-    return users
+    return {"users": users}
 
 
 @router.get("/users/{user_id}", tags=["users"])
