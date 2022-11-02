@@ -26,7 +26,7 @@ def get_db():
 class UserModel(Base):
     __tablename__ = "user"
 
-    id: int = Column(Integer, primary_key=True, index=True)
+    id: str = Column(String(255), primary_key=True, index=True)
     name: str = Column(String(255), nullable=False)
     email: str = Column(String(255), unique=True, nullable=False)
     password: str = Column(String(255))
@@ -36,6 +36,5 @@ class UserModel(Base):
     )
     updated_at: datetime = Column(
         DateTime(timezone=True),
-        server_default=func.now(),
         onupdate=func.now(),
     )
