@@ -59,7 +59,7 @@ async def update_user(input: UpdateUserInput, db: Session = Depends(get_db)):
 
 
 @router.delete("/users/{user_id}", tags=["users"])
-async def delete_user(user_id: int, db: Session = Depends(get_db)):
+async def delete_user(user_id: str, db: Session = Depends(get_db)):
     user: Optional[User] = user_repository.find_by_id(db, user_id)
     if not user:
         return UserNotFound()

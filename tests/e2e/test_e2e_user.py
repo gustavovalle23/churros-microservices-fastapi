@@ -175,3 +175,27 @@ def test_update_user_with_already_registered_email():
     assert "email" in error.get("loc")
     assert error.get("msg") == "Email already registered"
     assert error.get("type") == "already_registered_error"
+
+
+def test_delete_user_with_a_valid_userid():
+    response = client.delete("/users/111111111111111111111111")
+    assert response.json().get("message") == "deleted"
+
+    user = Sqlite3.find_by_id("111111111111111111111111")
+    original_user = list(
+        filter(lambda user: user.get("id") == "111111111111111111111111", users)
+    )[0]
+    assert user.name != original_user.get("name")
+    assert user.email != original_user.get("email")
+    assert user.password != original_user.get("password")
+    assert not original_user.get("password").startswith("deleted")
+    assert user.password.startswith("deleted")
+    assert user.active is False
+
+
+def test_delete_user_with_an_invalid_userid():
+    response = client.delete("/users/111111111111111111111112")
+    error = response.json().get("detail")[0]
+    assert "user_id" in error.get("loc")
+    assert error.get("msg") == "User not found"
+    assert response.status_code == 404

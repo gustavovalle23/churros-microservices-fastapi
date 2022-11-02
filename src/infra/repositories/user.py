@@ -71,12 +71,17 @@ def inactivate(db: Session, user_id: str) -> None:
 
 def delete(db: Session, user_id: str) -> None:
     db.query(UserModel).filter(UserModel.id == user_id).update(
-        {"email": random_string(), "active": False, "password": random_string()}
+        {
+            "email": random_string(),
+            "active": False,
+            "name": random_string(),
+            "password": f"deleted_{random_string(50)}",
+        }
     )
     db.commit()
 
 
-def random_string():
+def random_string(size=10):
     return "".join(
-        random.choice(string.ascii_lowercase + string.digits) for _ in range(10)
+        random.choice(string.ascii_lowercase + string.digits) for _ in range(size)
     )
