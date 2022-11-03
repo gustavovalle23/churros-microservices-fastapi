@@ -81,7 +81,7 @@ async def delete_user(
     return {"message": "deleted"}
 
 
-@router.post("/token", response_model=Token)
+@router.post("/token", response_model=Token, tags=["users"])
 async def login(
     form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
 ):

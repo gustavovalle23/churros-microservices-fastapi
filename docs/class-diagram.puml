@@ -14,6 +14,7 @@ User : createUser()
 User : findUser()
 User : updateUser()
 User : deleteUser()
+User : inactivate()
 User : login()
 
 @enduml
