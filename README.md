@@ -6,7 +6,6 @@ git clone https://github.com/churros-py/user-microservice-python.git
 ### Access the project directory
 ```
 cd user-microservice-python
-git checkout fastapi
 ```
 
 ### Initialization of the virtual environment
