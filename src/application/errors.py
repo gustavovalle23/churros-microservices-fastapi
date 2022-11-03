@@ -28,3 +28,17 @@ class EmailAlreadyRegistered:
                 }
             ],
         )
+
+
+class InvalidEmailPasswordMatch:
+    def __init__(self) -> None:
+        raise HTTPException(
+            status.HTTP_401_UNAUTHORIZED,
+            [
+                {
+                    "loc": ["param", "password"],
+                    "msg": "Invalid Credentials",
+                    "type": "invalid_credentials",
+                }
+            ],
+        )
