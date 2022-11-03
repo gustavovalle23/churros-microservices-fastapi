@@ -4,8 +4,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 from main import app
-from tests.utils import UserSeed, Sqlite3
 from tests.mocks.user import users
+from tests.utils import UserSeed, Sqlite3, generate_token_user
 
 client = TestClient(app)
 
@@ -101,19 +101,14 @@ def test_inactivate_user_with_a_valid_userid():
     user = Sqlite3.find_by_id("111111111111111111111111")
     assert user.active == True
 
-    response = client.post("/users/inactivate/111111111111111111111111")
+    response = client.post(
+        "/users/inactivate",
+        headers={"Authorization": f"Bearer {generate_token_user(client)}"},
+    )
     assert response.json().get("message") == "inactivated"
 
     user = Sqlite3.find_by_id("111111111111111111111111")
     assert user.active == False
-
-
-def test_inactivate_user_with_an_invalid_userid():
-    response = client.post("/users/inactivate/111111111111111111111112")
-    error = response.json().get("detail")[0]
-    assert "user_id" in error.get("loc")
-    assert error.get("msg") == "User not found"
-    assert response.status_code == 404
 
 
 def test_update_user_with_valid_args():
@@ -177,8 +172,10 @@ def test_update_user_with_already_registered_email():
     assert error.get("type") == "already_registered_error"
 
 
-def test_delete_user_with_a_valid_userid():
-    response = client.delete("/users/111111111111111111111111")
+def test_delete_user_with_a_valid_user():
+    response = client.delete(
+        "/users", headers={"Authorization": f"Bearer {generate_token_user(client)}"}
+    )
     assert response.json().get("message") == "deleted"
 
     user = Sqlite3.find_by_id("111111111111111111111111")
@@ -191,11 +188,3 @@ def test_delete_user_with_a_valid_userid():
     assert not original_user.get("password").startswith("deleted")
     assert user.password.startswith("deleted")
     assert user.active is False
-
-
-def test_delete_user_with_an_invalid_userid():
-    response = client.delete("/users/111111111111111111111112")
-    error = response.json().get("detail")[0]
-    assert "user_id" in error.get("loc")
-    assert error.get("msg") == "User not found"
-    assert response.status_code == 404

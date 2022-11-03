@@ -19,4 +19,5 @@ def run_around_tests():
 def test_authenticate_user():
     data = {"username": "admin@gmail.com", "password": "admin"}
     response = client.post("/token", data)
-    print(response.json())
+    assert response.json().get("access_token") is not None
+    assert response.json().get("token_type") == "bearer"

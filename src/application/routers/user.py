@@ -43,13 +43,15 @@ async def create_user(user: CreateUserInput, db: Session = Depends(get_db)):
     return {"user": user_created}
 
 
-@router.post("/users/inactivate/{user_id}", tags=["users"])
-async def inactivate_user(user_id: str, db: Session = Depends(get_db)):
-    user: Optional[User] = user_repository.find_by_id(db, user_id)
+@router.post("/users/inactivate", tags=["users"])
+async def inactivate_user(
+    db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)
+):
+    user: Optional[User] = user_repository.find_by_id(db, current_user.id)
     if not user:
         return UserNotFound()
 
-    user_repository.inactivate(db, user_id)
+    user_repository.inactivate(db, current_user.id)
     return {"message": "inactivated"}
 
 
@@ -66,9 +68,8 @@ async def update_user(input: UpdateUserInput, db: Session = Depends(get_db)):
     return {"message": "updated", "user": updated_user}
 
 
-@router.delete("/users/{user_id}", tags=["users"])
+@router.delete("/users", tags=["users"])
 async def delete_user(
-    user_id: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -76,7 +77,7 @@ async def delete_user(
     if not user:
         return UserNotFound()
 
-    user_repository.delete(db, user_id)
+    user_repository.delete(db, current_user.id)
     return {"message": "deleted"}
 
 
