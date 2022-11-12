@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 from jose import jwt, JWTError
-from src.domain.user import User
+from src.user.domain.user import User
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, status, HTTPException
 
-from src.infra.database import get_db
-from src.infra.gateways.jwt import ALGORITHM, SECRET_KEY
-from src.infra.repositories import user as user_repository
+from src.user.infra.database import get_db
+from src.user.infra.gateways.jwt import ALGORITHM, SECRET_KEY
+from src.user.infra.repositories import user as user_repository
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 

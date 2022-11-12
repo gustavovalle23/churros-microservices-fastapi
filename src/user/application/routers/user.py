@@ -6,17 +6,17 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
-from src.domain.user import User
-from src.infra.database import get_db
-from src.infra.repositories import user as user_repository
-from src.application.errors import UserNotFound, EmailAlreadyRegistered
-from src.application.dtos.user import CreateUserInput, UpdateUserInput, Token
-from src.infra.gateways.jwt import (
+from src.user.domain.user import User
+from src.user.infra.database import get_db
+from src.user.infra.repositories import user as user_repository
+from src.user.application.errors import UserNotFound, EmailAlreadyRegistered
+from src.user.application.dtos.user import CreateUserInput, UpdateUserInput, Token
+from src.user.infra.gateways.jwt import (
     authenticate_user,
     ACCESS_TOKEN_EXPIRE_MINUTES,
     create_access_token,
 )
-from src.infra.gateways.auth import get_current_active_user
+from src.user.infra.gateways.auth import get_current_active_user
 
 
 router = APIRouter()

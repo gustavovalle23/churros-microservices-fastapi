@@ -5,9 +5,9 @@ import string
 from uuid import uuid1 as uuid
 from sqlalchemy.orm import Session, Query
 
-from src.domain.user import User
-from src.infra.database import UserModel
-from src.application.dtos.user import CreateUserInput, UpdateUserInput
+from src.user.domain.user import User
+from src.user.infra.database import UserModel
+from src.user.application.dtos.user import CreateUserInput, UpdateUserInput
 
 
 def to_entity(model: Query | UserModel) -> User | None:
