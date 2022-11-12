@@ -5,7 +5,7 @@ from dotenv import dotenv_values
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Integer, Column, String, Boolean, DateTime
+from sqlalchemy import Column, String, Boolean, DateTime
 
 envs = dotenv_values(".env")
 engine = create_engine(envs["DATABASE_URL"])

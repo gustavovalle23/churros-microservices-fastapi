@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import random
 import string
 from uuid import uuid1 as uuid
@@ -47,18 +48,18 @@ def find_by_id(db: Session, user_id: str) -> User | None:
 
 
 def save(db: Session, input: CreateUserInput) -> User:
-    user = UserModel(
-        id=uuid().hex, name=input.name, email=input.email, password=input.password
-    )
+    user = UserModel(id=uuid().hex, **json.loads(input.json()))
     db.add(user)
     db.commit()
     return to_entity(user)
 
 
 def update(db: Session, input: UpdateUserInput) -> User:
-    db.query(UserModel).filter(UserModel.id == input.id).update(
-        {"email": input.email, "name": input.name}
-    )
+    user_id = input.id
+    data: dict = json.loads(input.json())
+    data = {k: v for k, v in data.items() if v != None and k != "id"}
+
+    db.query(UserModel).filter(UserModel.id == user_id).update(data)
     db.commit()
     updated_user = db.query(UserModel).filter(UserModel.id == input.id).first()
     return to_entity(updated_user)

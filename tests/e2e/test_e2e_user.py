@@ -121,6 +121,17 @@ class TestUpdateUser:
             response.json().get("user", {}).get("email") == "string_updated@gmail.com"
         )
 
+    def test_update_user_with_specific_fields(self):
+        data = json.dumps(
+            {
+                "id": "111111111111111111111111",
+                "name": "name_updated",
+            }
+        )
+        response = client.patch("/users", data)
+        assert response.json().get("user", {}).get("name") == "name_updated"
+        assert response.json().get("user", {}).get("email") == "admin@gmail.com"
+
     def test_update_user_with_invalid_userid(self):
         data = json.dumps(
             {
