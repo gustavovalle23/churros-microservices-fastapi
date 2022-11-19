@@ -4,8 +4,12 @@ import pytest
 from fastapi.testclient import TestClient
 
 from main import app
-from tests.mocks.user import users
-from tests.utils import UserSeed, Sqlite3, generate_token_user
+from src.domain.tests.mocks.user import users
+from src.domain.tests.utils import UserSeed, Sqlite3, generate_token_user
+
+from src.bootstrap import bootstrap_di
+
+bootstrap_di()
 
 client = TestClient(app)
 
