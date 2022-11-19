@@ -5,7 +5,7 @@ import string
 from uuid import uuid1 as uuid
 from sqlalchemy.orm import Session, Query
 
-from src.domain.user.entity.user import User
+from src.domain.user.entity import User
 from src.infra.database import UserModel
 from src.infra.api.routers.dtos.user import CreateUserInput, UpdateUserInput
 
@@ -78,7 +78,7 @@ class UserSqlachemyRepository:
         )
         db.commit()
 
-    def random_string(size=10):
+    def random_string(self, size=10):
         return "".join(
             random.choice(string.ascii_lowercase + string.digits) for _ in range(size)
         )

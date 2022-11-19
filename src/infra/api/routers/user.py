@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from kink import di
 
-from src.domain.user.entity.user import User
+from src.domain.user.entity import User
 from src.infra.database import get_db
 from src.infra.api.routers.errors import UserNotFound, EmailAlreadyRegistered
 from src.infra.api.routers.dtos.user import CreateUserInput, UpdateUserInput, Token
@@ -17,7 +17,7 @@ from src.infra.gateways.jwt import (
     create_access_token,
 )
 from src.infra.gateways.auth import get_current_active_user
-from src.domain.user.contracts.repository import UserRepository
+from src.domain.user.repository import UserRepository
 
 router = APIRouter()
 
