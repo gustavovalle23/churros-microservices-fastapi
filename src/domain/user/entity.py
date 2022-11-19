@@ -2,7 +2,7 @@
 from datetime import datetime
 from dataclasses import dataclass
 
-from src.__shared.domain.entity import Entity
+from src.__shared.entity import Entity
 from src.domain.user.validators import UserValidatorFactory
 
 

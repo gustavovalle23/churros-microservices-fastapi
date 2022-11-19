@@ -17,11 +17,13 @@ from src.infra.gateways.jwt import (
     create_access_token,
 )
 from src.infra.gateways.auth import get_current_active_user
+from src.usecases.create.create_user_use_case import CreateUserUseCase
 from src.domain.user.repository import UserRepository
 
 router = APIRouter()
 
 user_repository: UserRepository = di[UserRepository]
+create_user_use_case = CreateUserUseCase()
 
 
 @router.get("/users", tags=["users"])
@@ -40,8 +42,7 @@ async def find_user(user_id: str, db: Session = Depends(get_db)):
 
 @router.post("/users", tags=["users"], status_code=status.HTTP_201_CREATED)
 async def create_user(user: CreateUserInput, db: Session = Depends(get_db)):
-    user.password = bcrypt.hashpw(user.password.encode(), bcrypt.gensalt())
-    user_created = user_repository.save(db, user)
+    user_created = create_user_use_case.execute(user, db)
     return {"user": user_created}
 
 

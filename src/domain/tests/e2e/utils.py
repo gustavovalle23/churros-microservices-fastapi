@@ -24,11 +24,11 @@ class UserSeed:
 
 class Sqlite3:
     @staticmethod
-    def find_by_id(user_id: str):
+    def find_by_id(user_id: int):
         with Session(engine) as session:
             return session.query(UserModel).filter_by(id=user_id).first()
 
 
 def generate_token_user(client: TestClient) -> str:
-    data = {"username": "admin@gmail.com", "password": "admin"}
+    data = {"username": "admin1@gmail.com", "password": "admin"}
     return client.post("/token", data).json().get("access_token")

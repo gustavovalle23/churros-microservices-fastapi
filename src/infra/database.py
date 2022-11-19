@@ -5,7 +5,7 @@ from dotenv import dotenv_values
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, String, Boolean, DateTime
+from sqlalchemy import Column, String, Boolean, DateTime, Integer
 
 envs = dotenv_values(".env")
 engine = create_engine(envs["DATABASE_URL"])
@@ -25,7 +25,7 @@ def get_db():
 class UserModel(Base):
     __tablename__ = "user"
 
-    id: str = Column(String(255), primary_key=True, index=True)
+    id: int = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name: str = Column(String(255), nullable=False)
     email: str = Column(String(255), unique=True, nullable=False)
     password: str = Column(String(255))

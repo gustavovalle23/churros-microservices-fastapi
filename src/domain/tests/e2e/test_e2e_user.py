@@ -39,12 +39,12 @@ class TestFindUser:
         assert len(response.json().get("users")) == len(users) - 2
 
     def test_find_user_by_id(self):
-        response = client.get("/users/111111111111111111111111")
+        response = client.get("/users/1")
         assert response.json().get("error") is None
         assert response.json().get("user") is not None
 
     def test_should_return_error_when_not_find_user_by_id(self):
-        response = client.get("/users/111111111111111111111112")
+        response = client.get("/users/211111111111111111111111")
         error = response.json().get("detail")[0]
         assert "user_id" in error.get("loc")
         assert error.get("msg") == "User not found"
@@ -96,7 +96,7 @@ class TestCreateUser:
 
 class TestInactivateUser:
     def test_inactivate_user_with_a_valid_user(self):
-        user = Sqlite3.find_by_id("111111111111111111111111")
+        user = Sqlite3.find_by_id(1)
         assert user.active == True
 
         response = client.post(
@@ -105,7 +105,7 @@ class TestInactivateUser:
         )
         assert response.json().get("message") == "inactivated"
 
-        user = Sqlite3.find_by_id("111111111111111111111111")
+        user = Sqlite3.find_by_id(1)
         assert user.active == False
 
 
@@ -113,7 +113,7 @@ class TestUpdateUser:
     def test_update_user_with_valid_args(self):
         data = json.dumps(
             {
-                "id": "111111111111111111111111",
+                "id": 1,
                 "name": "name_updated",
                 "email": "string_updated@gmail.com",
                 "password": "string",
@@ -128,13 +128,13 @@ class TestUpdateUser:
     def test_update_user_with_specific_fields(self):
         data = json.dumps(
             {
-                "id": "111111111111111111111111",
+                "id": 1,
                 "name": "name_updated",
             }
         )
         response = client.patch("/users", data)
         assert response.json().get("user", {}).get("name") == "name_updated"
-        assert response.json().get("user", {}).get("email") == "admin@gmail.com"
+        assert response.json().get("user", {}).get("email") == "admin1@gmail.com"
 
     def test_update_user_with_invalid_userid(self):
         data = json.dumps(
@@ -154,7 +154,7 @@ class TestUpdateUser:
     def test_update_user_with_invalid_email(self):
         data = json.dumps(
             {
-                "id": "111111111111111111111111",
+                "id": 1,
                 "name": "name_updated",
                 "email": "admin@sqs",
                 "password": "string",
@@ -168,9 +168,9 @@ class TestUpdateUser:
     def test_update_user_with_already_registered_email(self):
         data = json.dumps(
             {
-                "id": "111111111111111111111111",
+                "id": 1,
                 "name": "name_updated",
-                "email": "admin1@gmail.com",
+                "email": "admin2@gmail.com",
                 "password": "string",
             }
         )
@@ -188,10 +188,8 @@ class TestDeleteUser:
         )
         assert response.json().get("message") == "deleted"
 
-        user = Sqlite3.find_by_id("111111111111111111111111")
-        original_user = list(
-            filter(lambda user: user.get("id") == "111111111111111111111111", users)
-        )[0]
+        user = Sqlite3.find_by_id(1)
+        original_user = list(filter(lambda user: user.get("id") == 1, users))[0]
         assert user.name != original_user.get("name")
         assert user.email != original_user.get("email")
         assert user.password != original_user.get("password")
@@ -202,7 +200,7 @@ class TestDeleteUser:
 
 class TestAuthUser:
     def test_authenticate_user_with_correct_credentials(self):
-        data = {"username": "admin@gmail.com", "password": "admin"}
+        data = {"username": "admin1@gmail.com", "password": "admin"}
         response = client.post("/token", data)
         assert response.json().get("access_token") is not None
         assert response.json().get("token_type") == "bearer"
