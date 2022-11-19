@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session, Query
 
 from src.user.domain.user import User
 from src.user.infra.database import UserModel
-from src.user.application.dtos.user import CreateUserInput, UpdateUserInput
+from src.user.infra.routers.dtos.user import CreateUserInput, UpdateUserInput
 
 
 class UserSqlachemyRepository:

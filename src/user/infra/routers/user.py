@@ -5,21 +5,23 @@ from typing import Tuple, Optional
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
+from kink import di
 
 from src.user.domain.user import User
 from src.user.infra.database import get_db
-from src.user.infra.repositories import user as user_repository
-from src.user.application.errors import UserNotFound, EmailAlreadyRegistered
-from src.user.application.dtos.user import CreateUserInput, UpdateUserInput, Token
+from src.user.infra.routers.errors import UserNotFound, EmailAlreadyRegistered
+from src.user.infra.routers.dtos.user import CreateUserInput, UpdateUserInput, Token
 from src.user.infra.gateways.jwt import (
     authenticate_user,
     ACCESS_TOKEN_EXPIRE_MINUTES,
     create_access_token,
 )
 from src.user.infra.gateways.auth import get_current_active_user
-
+from src.user.domain.contracts.repository import UserRepository
 
 router = APIRouter()
+
+user_repository: UserRepository = di[UserRepository]
 
 
 @router.get("/users", tags=["users"])

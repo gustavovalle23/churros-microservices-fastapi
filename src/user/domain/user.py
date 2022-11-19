@@ -4,7 +4,7 @@ from uuid import UUID as uuid
 from dataclasses import dataclass
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class User:
     id: uuid
     name: str

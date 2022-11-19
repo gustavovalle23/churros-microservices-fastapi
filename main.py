@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 
 from src.user.infra.database import Base, engine
-from src.user.application.routers.user import router as router_users
+from src.user.infra.routers.user import router as router_users
 
 Base.metadata.create_all(bind=engine)
 
