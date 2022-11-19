@@ -2,7 +2,7 @@
 
 entity User
 
-User : uuid id
+User : string id
 User : string name
 User : string email
 User : string password

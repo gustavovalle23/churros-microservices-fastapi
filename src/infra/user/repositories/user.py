@@ -2,7 +2,6 @@
 import json
 import random
 import string
-from uuid import uuid1 as uuid
 from sqlalchemy.orm import Session, Query
 
 from src.domain.user.entity import User
@@ -48,7 +47,7 @@ class UserSqlachemyRepository:
         return self.to_entity(user)
 
     def save(self, db: Session, input: CreateUserInput) -> User:
-        user = UserModel(id=uuid().hex, **json.loads(input.json()))
+        user = UserModel(**json.loads(input.json()))
         db.add(user)
         db.commit()
         return self.to_entity(user)

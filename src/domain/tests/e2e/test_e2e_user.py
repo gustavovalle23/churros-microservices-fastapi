@@ -4,8 +4,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 from main import app
-from src.domain.tests.mocks.user import users
-from src.domain.tests.utils import UserSeed, Sqlite3, generate_token_user
+from src.domain.tests.e2e.mocks.user import users
+from src.domain.tests.e2e.utils import UserSeed, Sqlite3, generate_token_user
 
 from src.bootstrap import bootstrap_di
 
