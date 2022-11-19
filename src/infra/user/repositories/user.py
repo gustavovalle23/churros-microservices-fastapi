@@ -5,9 +5,9 @@ import string
 from uuid import uuid1 as uuid
 from sqlalchemy.orm import Session, Query
 
-from src.user.domain.user import User
-from src.user.infra.database import UserModel
-from src.user.infra.routers.dtos.user import CreateUserInput, UpdateUserInput
+from src.domain.user.entity.user import User
+from src.infra.database import UserModel
+from src.infra.api.routers.dtos.user import CreateUserInput, UpdateUserInput
 
 
 class UserSqlachemyRepository:

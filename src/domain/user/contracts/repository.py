@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from abc import ABC
 from typing import List
 
-from src.user.domain.user import User
+from src.domain.user.entity.user import User
 
 
 class UserRepository(ABC):

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from fastapi import FastAPI
 
-from src.user.infra.database import Base, engine
-from src.user.infra.routers.user import router as router_users
+from src.infra.database import Base, engine
+from src.infra.api.routers.user import router
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-app.include_router(router_users)
+# app.include_router(router)

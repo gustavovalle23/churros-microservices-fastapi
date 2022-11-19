@@ -4,7 +4,8 @@ from jose import jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
-from src.user.infra.repositories import user as user_repository
+
+from src.infra.user.repositories import user as user_repository
 
 
 envs = dotenv_values(".env")
