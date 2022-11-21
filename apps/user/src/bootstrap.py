@@ -2,7 +2,6 @@
 from kink import di
 
 from src.domain.user.repository import UserRepository
-
 from src.infra.user.repositories.user import UserSqlachemyRepository
 
 

@@ -1,28 +1,9 @@
-### Project download
-```
-git clone https://github.com/churros-py/user-microservice-python.git
-```
+## Monorepo - Auth System
 
-### Access the project directory
-```
-cd user-microservice-python
-```
+To access the microservices:
+- user-microservice: apps/user
 
-### Initialization of the virtual environment
-```
-python -m venv venv && source venv/bin/activate
-pip install -r requirements.txt
-```
+To access Libs (common dependencies):
+- validators: libs/validators
 
-### Start the local server (will be available at http://127.0.0.1:8000 or localhost:8000)
-```
-cp .env.example .env
-uvicorn main:app --reload
-```
-
-### Run tests
-```
-python -m pytest tests -s
-```
-
-### Access docs at http://localhost:8000/docs or http://localhost:8000/redoc
+Using Bazel for automate builds and tests in project
