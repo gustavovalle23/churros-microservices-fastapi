@@ -16,7 +16,18 @@ authors = [
     {name = "Gustavo Valle", email = "gustavo.vallerp@hotmail.com"},
     {name = "Gustavo Valle"},
 ]
-dependencies = ["kink<1.0.0,>=0.6.5", "SQLAlchemy<2.0.0,>=1.4.44", "fastapi<1.0.0,>=0.87.0", "python-dotenv<1.0.0,>=0.21.0", "httpx<1.0.0,>=0.23.1", "bcrypt<5.0.0,>=4.0.1", "python-jose<4.0.0,>=3.3.0", "passlib<2.0.0,>=1.7.4", "python-multipart<1.0.0,>=0.0.5"]
+dependencies = [
+    "kink<1.0.0,>=0.6.5",
+    "SQLAlchemy<2.0.0,>=1.4.44",
+    "fastapi<1.0.0,>=0.87.0",
+    "python-dotenv<1.0.0,>=0.21.0",
+    "httpx<1.0.0,>=0.23.1",
+    "bcrypt<5.0.0,>=4.0.1",
+    "python-jose<4.0.0,>=3.3.0",
+    "passlib<2.0.0,>=1.7.4",
+    "python-multipart<1.0.0,>=0.0.5",
+    "pytest>=7.2.0",
+]
 requires-python = ">=3.10,<4.0"
 license = {text = "MIT"}
 
