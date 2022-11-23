@@ -6,7 +6,7 @@ from src.__shared.entity import Entity
 from src.domain.user.factories.user_validator_factory import UserValidatorFactory
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass
 class User(Entity):
     id: str
     name: str

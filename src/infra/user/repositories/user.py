@@ -10,12 +10,13 @@ from src.infra.api.routers.dtos.user import CreateUserInput, UpdateUserInput
 
 
 class UserSqlachemyRepository:
-    def to_entity(self, model: Query | UserModel) -> User | None:
+    @staticmethod
+    def to_entity(model: Query | UserModel) -> User | None:
         if not model:
             return
 
         return User(
-            model.id,
+            str(model.id),
             model.name,
             model.email,
             model.password,
@@ -27,7 +28,7 @@ class UserSqlachemyRepository:
     def find_all(self, db: Session, skip: int = 0, limit: int = 100):
         users = (
             db.query(UserModel)
-            .filter(UserModel.active == True)
+            .filter(UserModel.active is True)
             .offset(skip)
             .limit(limit)
         )
@@ -55,7 +56,7 @@ class UserSqlachemyRepository:
     def update(self, db: Session, input: UpdateUserInput) -> User:
         user_id = input.id
         data: dict = json.loads(input.json())
-        data = {k: v for k, v in data.items() if v != None and k != "id"}
+        data = {k: v for k, v in data.items() if v is not None and k != "id"}
 
         db.query(UserModel).filter(UserModel.id == user_id).update(data)
         db.commit()
@@ -77,7 +78,8 @@ class UserSqlachemyRepository:
         )
         db.commit()
 
-    def random_string(self, size=10):
+    @staticmethod
+    def random_string(size=10):
         return "".join(
             random.choice(string.ascii_lowercase + string.digits) for _ in range(size)
         )
