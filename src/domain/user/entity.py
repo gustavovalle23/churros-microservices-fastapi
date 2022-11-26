@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+from typing import Optional
 from datetime import datetime
 from dataclasses import dataclass
 
 from src.__shared.entity import Entity
-from src.domain.user.factories.user_validator_factory import UserValidatorFactory
 
 
 @dataclass(slots=True, frozen=True)
@@ -13,8 +13,8 @@ class User(Entity):
     email: str
     password: str
     active: bool
-    created_at: datetime = None
-    updated_at: datetime = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
     def activate(self):
         self.__setattr__('active', True)
@@ -23,8 +23,9 @@ class User(Entity):
         self.validate()
 
     def validate(self):
-        validator = UserValidatorFactory.create()
+        from src.domain.user.factories import UserValidatorFactory
 
+        validator = UserValidatorFactory.create()
         is_valid = validator.validate(self)
 
         if not is_valid:

@@ -3,27 +3,16 @@ import json
 import random
 import string
 from typing import Tuple
-from sqlalchemy.orm import Session, Query
+from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import true
 
 from src.domain.user.entity import User
+from src.domain.user.factories import UserFactory
 from src.infra.database import UserModel
 from src.infra.api.routers.dtos.user import CreateUserInput, UpdateUserInput
 
 
 class UserSqlachemyRepository:
-    @staticmethod
-    def to_entity(model: Query | UserModel) -> User:
-        return User(
-            str(model.id),
-            model.name,
-            model.email,
-            model.password,
-            model.active,
-            model.created_at,
-            model.updated_at,
-        )
-
     def find_all(self, db: Session, skip: int = 0, limit: int = 100) -> Tuple[User]:
         users = (
             db.query(UserModel)
@@ -31,13 +20,13 @@ class UserSqlachemyRepository:
             .offset(skip)
             .limit(limit)
         )
-        return tuple(map(self.to_entity, users))
+        return tuple(map(UserFactory.create, users))
 
     def find_by_email(self, db: Session, email: str) -> User | None:
         user = db.query(UserModel).filter(UserModel.email == email).first()
         if not user:
             return
-        return self.to_entity(user)
+        return UserFactory.create(user)
 
     def find_by_id(self, db: Session, user_id: str) -> User | None:
         user = (
@@ -48,13 +37,13 @@ class UserSqlachemyRepository:
         )
         if not user:
             return
-        return self.to_entity(user)
+        return UserFactory.create(user)
 
     def save(self, db: Session, input: CreateUserInput) -> User:
         user = UserModel(**json.loads(input.json()))
         db.add(user)
         db.commit()
-        return self.to_entity(user)
+        return UserFactory.create(user)
 
     def update(self, db: Session, update_user_input: UpdateUserInput) -> User:
         user_id = update_user_input.id
@@ -63,8 +52,9 @@ class UserSqlachemyRepository:
 
         db.query(UserModel).filter(UserModel.id == user_id).update(data)
         db.commit()
+
         updated_user = db.query(UserModel).filter(UserModel.id == update_user_input.id).first()
-        return self.to_entity(updated_user)
+        return UserFactory.create(updated_user)
 
     def inactivate(self, db: Session, user_id: str) -> None:
         db.query(UserModel).filter(UserModel.id == user_id).update({"active": False})

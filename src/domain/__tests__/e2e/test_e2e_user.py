@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-import json
 import pytest
+from typing import Mapping
 from fastapi.testclient import TestClient
-from typing import Mapping, Union
 
 from main import app
+from src.bootstrap import bootstrap_di
 from src.domain.__tests__.e2e.mocks.user import users
 from src.domain.__tests__.e2e.utils import UserSeed, Sqlite3, generate_token_user
-from src.bootstrap import bootstrap_di
 
 bootstrap_di()
 
@@ -22,8 +21,10 @@ def run_around_tests():
 
 
 class TestFindUser:
+    endpoint = "/users"
+
     def test_find_all_users_without_pagination(self):
-        response = client.get("/users")
+        response = client.get(self.endpoint)
         assert len(response.json().get("users")) == 10
 
     def test_find_all_users_with_limit_pagination(self):
@@ -52,14 +53,16 @@ class TestFindUser:
 
 
 class TestCreateUser:
+    endpoint = "/users"
+
     def test_create_user_with_valid_args(self):
         data: Mapping[str, str] = {"name": "string", "email": "string@gmail.com", "password": "string"}
-        response = client.post("/users", json=data)
+        response = client.post(self.endpoint, json=data)
         assert response.json().get("user") is not None
 
     def test_create_user_with_missing_email(self):
         data: Mapping[str, str] = {"name": "string", "password": "string"}
-        response = client.post("/users", json=data)
+        response = client.post(self.endpoint, json=data)
         error = response.json().get("detail")[0]
         assert "email" in error.get("loc")
         assert error.get("type") == "value_error.missing"
@@ -69,14 +72,14 @@ class TestCreateUser:
                 "name": "string",
                 "email": "string@gmail.com",
             }
-        response = client.post("/users", json=data)
+        response = client.post(self.endpoint, json=data)
         error = response.json().get("detail")[0]
         assert "password" in error.get("loc")
         assert error.get("type") == "value_error.missing"
 
     def test_create_user_with_missing_name(self):
         data = {"email": "string@gmail.com", "password": "string"}
-        response = client.post("/users", json=data)
+        response = client.post(self.endpoint, json=data)
         error = response.json().get("detail")[0]
         assert "name" in error.get("loc")
         assert error.get("type") == "value_error.missing"
@@ -84,13 +87,15 @@ class TestCreateUser:
 
     def test_create_user_with_invalid_email(self):
         data = {"name": "string", "email": "string", "password": "string"}
-        response = client.post("/users", json=data)
+        response = client.post(self.endpoint, json=data)
         error = response.json().get("detail")[0]
         assert "email" in error.get("loc")
         assert error.get("type") == "value_error"
 
 
 class TestInactivateUser:
+    endpoint = "/users"
+
     def test_inactivate_user_with_a_valid_user(self):
         user = Sqlite3.find_by_id(1)
         assert user.active is True
@@ -106,6 +111,8 @@ class TestInactivateUser:
 
 
 class TestUpdateUser:
+    endpoint = "/users"
+
     def test_update_user_with_valid_args(self):
         data = {
                 "id": 1,
@@ -113,7 +120,7 @@ class TestUpdateUser:
                 "email": "string_updated@gmail.com",
                 "password": "string",
             }
-        response = client.patch("/users", json=data)
+        response = client.patch(self.endpoint, json=data)
         assert response.json().get("user", {}).get("name") == "name_updated"
         assert (
             response.json().get("user", {}).get("email") == "string_updated@gmail.com"
@@ -124,7 +131,7 @@ class TestUpdateUser:
                 "id": 1,
                 "name": "name_updated",
             }
-        response = client.patch("/users", json=data)
+        response = client.patch(self.endpoint, json=data)
         assert response.json().get("user", {}).get("name") == "name_updated"
         assert response.json().get("user", {}).get("email") == "admin1@gmail.com"
 
@@ -135,7 +142,7 @@ class TestUpdateUser:
                 "email": "string_updated@gmail.com",
                 "password": "string",
             }
-        response = client.patch("/users", json=data)
+        response = client.patch(self.endpoint, json=data)
         error = response.json().get("detail")[0]
         assert "user_id" in error.get("loc")
         assert error.get("msg") == "User not found"
@@ -148,7 +155,7 @@ class TestUpdateUser:
                 "email": "admin@sqs",
                 "password": "string",
             }
-        response = client.patch("/users", json=data)
+        response = client.patch(self.endpoint, json=data)
         error = response.json().get("detail")[0]
         assert "email" in error.get("loc")
         assert error.get("type") == "value_error"
@@ -160,7 +167,7 @@ class TestUpdateUser:
                 "email": "admin2@gmail.com",
                 "password": "string",
             }
-        response = client.patch("/users", json=data)
+        response = client.patch(self.endpoint, json=data)
         error = response.json().get("detail")[0]
         assert "email" in error.get("loc")
         assert error.get("msg") == "Email already registered"
@@ -168,9 +175,11 @@ class TestUpdateUser:
 
 
 class TestDeleteUser:
+    endpoint = "/users"
+
     def test_delete_user_with_a_valid_user(self):
         response = client.delete(
-            "/users", headers={"Authorization": f"Bearer {generate_token_user(client)}"}
+            self.endpoint, headers={"Authorization": f"Bearer {generate_token_user(client)}"}
         )
         assert response.json().get("message") == "deleted"
 
