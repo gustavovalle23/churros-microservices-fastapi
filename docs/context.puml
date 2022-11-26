@@ -1,15 +1,37 @@
 @startuml Context
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 
-title Component Diagram for Churros Financial System - API Application
+title Component Diagram for Churros System - Delivery Restaurant Franchise
 
-Person(user, "User", "Company that want to manage your finance")
+Person(user, "User", "user interested in order items from the restaurant")
+Person(employee, "Employee", "User responsible for administrative tasks in restaurant")
+
 Container(spa, "SPA", "ReactJS", "The main interface that the user interacts", $tags="v0.1")
-Container(apiUserMicroservice, "User MicroService", "Fastapi/Python", "Handles all business logic", $tags="v0.1")
-ContainerDb(dbUserMicroservice, "Database User Microservice", "PostgreSQL", "Holds user data")
+Container(adminSpa, "Admin SPA", "ReactJS", "The administrative interface that employees, managers, and administrators interact with", $tags="v0.1")
+
+Container(userMicroservice, "User MicroService", "Fastapi/Python", "Handles all business logic of users operations", $tags="v0.1")
+Container(restaurantMicroservice, "Restaurant MicroService", "Fastapi/Python", "Handles all business logic of restaurants operations", $tags="v0.1")
+Container(productMicroservice, "Product MicroService", "Fastapi/Python", "Handles all business logic of products operations", $tags="v0.1")
+
+Container(apiGateway, "Api Gateway", "Kongo", "Handles all requests and reverse proxy to various services and microservices", $tags="v0.1")
+
+ContainerDb(dbUserMicroservice, "User Database Microservice", "PostgreSQL", "Holds user data")
+ContainerDb(dbRestaurantMicroservice, "Restaurant Database Microservice", "PostgreSQL", "Holds restaurant data")
+ContainerDb(dbProductMicroservice, "Product Database Microservice", "PostgreSQL", "Holds product data")
+
 
 Rel(user, spa, "Uses", "http/https")
-Rel(spa, apiUserMicroservice, "Uses", "https/graphQL")
-Rel_R(apiUserMicroservice, dbUserMicroservice, "Reads/Writes")
+Rel(employee, adminSpa, "Uses", "http/https")
+
+Rel(spa, apiGateway, "Uses", "https/REST")
+Rel(adminSpa, apiGateway, "Uses", "https/REST")
+
+Rel(apiGateway, userMicroservice, "Uses", "https/REST")
+Rel(apiGateway, restaurantMicroservice, "Uses", "https/REST")
+Rel(apiGateway, productMicroservice, "Uses", "https/REST")
+
+Rel(userMicroservice, dbUserMicroservice, "Reads/Writes")
+Rel(restaurantMicroservice, dbRestaurantMicroservice, "Reads/Writes")
+Rel(productMicroservice, dbProductMicroservice, "Reads/Writes")
 
 @enduml
