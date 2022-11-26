@@ -3,9 +3,8 @@ from abc import ABC
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True, frozen=True)
 class Entity(ABC):
-
     id: str
 
     @property

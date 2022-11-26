@@ -27,7 +27,7 @@ class Output:
 class CreateUserUseCase(UseCase):
     user_repository: UserRepository = di[UserRepository]
 
-    def execute(self, input: Input, db: Session) -> Output:
-        input.password = bcrypt.hashpw(input.password.encode(), bcrypt.gensalt())
-        user_created = self.user_repository.save(db, input)
-        return user_created
+    def execute(self, input_use_case: Input, db: Session) -> Output:
+        input_use_case.__setattr__('password', bcrypt.hashpw(input_use_case.password.encode(), bcrypt.gensalt()))
+        user_created = self.user_repository.save(db, input_use_case)
+        return Output(user_created.name, user_created.email, user_created.active)

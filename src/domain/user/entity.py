@@ -6,7 +6,7 @@ from src.__shared.entity import Entity
 from src.domain.user.factories.user_validator_factory import UserValidatorFactory
 
 
-@dataclass
+@dataclass(slots=True, frozen=True)
 class User(Entity):
     id: str
     name: str
@@ -17,7 +17,7 @@ class User(Entity):
     updated_at: datetime = None
 
     def activate(self):
-        self.activate = True
+        self.__setattr__('active', True)
 
     def __post_init__(self):
         self.validate()
