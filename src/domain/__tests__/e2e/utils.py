@@ -11,7 +11,6 @@ class UserSeed:
     def insert_all():
         with Session(engine) as session:
             models = [UserModel(**user) for user in users]
-
             session.add_all(models)
             session.commit()
 
@@ -31,4 +30,5 @@ class Sqlite3:
 
 def generate_token_user(client: TestClient) -> str:
     data = {"username": "admin1@gmail.com", "password": "admin"}
-    return client.post("/token", data).json().get("access_token")
+    response = client.post("/token", data=data).json()
+    return response.get("access_token")
