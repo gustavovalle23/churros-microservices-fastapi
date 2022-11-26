@@ -1,3 +1,7 @@
+# Restaurant System
+
+![image](https://user-images.githubusercontent.com/55208546/204069761-6afa11f4-5a31-42ad-a16a-08372406a4df.png)
+
 ### Project download
 ```
 git clone https://github.com/churros-py/user-microservice-python.git
@@ -26,3 +30,4 @@ python -m pytest tests -s
 ```
 
 ### Access docs at http://localhost:8000/docs or http://localhost:8000/redoc
+
