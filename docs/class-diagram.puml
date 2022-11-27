@@ -1,8 +1,8 @@
-@startuml user
+@startuml class-diagram
 
 entity User
 
-User : string id
+User : integer id
 User : string name
 User : string email
 User : string password
@@ -10,11 +10,45 @@ User : boolean active
 User : date created_at
 User : date updated_at
 
-User : createUser()
-User : findUser()
-User : updateUser()
-User : deleteUser()
+User : create()
+User : find()
+User : update()
+User : delete()
 User : inactivate()
 User : login()
+
+entity Product
+
+Product : integer id
+Product : string name
+Product : integer avaiable
+Product : date created_at
+Product : date updated_at
+
+Product : create()
+Product : find()
+Product : update()
+Product : inactivate()
+
+entity Recipe
+
+Recipe : integer id
+Recipe : string name
+
+Recipe : create()
+Recipe : find()
+Recipe : update()
+Recipe : inactivate()
+
+
+entity ProductRecipe
+
+ProductRecipe : integer product_id
+ProductRecipe : integer recipe_id
+
+ProductRecipe : create()
+ProductRecipe : find()
+ProductRecipe : update()
+ProductRecipe : inactivate()
 
 @enduml
