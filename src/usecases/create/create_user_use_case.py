@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from dataclasses import dataclass
-from typing import Optional
-from kink import di
 import bcrypt
+from kink import di
+from dataclasses import dataclass
 from sqlalchemy.orm import Session
 
 from src.__shared.use_cases import UseCase
@@ -24,8 +23,9 @@ class Output:
     active: bool = True
 
 
+@dataclass(slots=True, frozen=True)
 class CreateUserUseCase(UseCase):
-    user_repository: UserRepository = di[UserRepository]
+    user_repository: UserRepository
 
     def execute(self, input_use_case: Input, db: Session) -> Output:
         input_use_case.__setattr__('password', bcrypt.hashpw(input_use_case.password.encode(), bcrypt.gensalt()))
