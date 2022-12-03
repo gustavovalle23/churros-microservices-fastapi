@@ -23,7 +23,7 @@ from src.domain.user.repository import UserRepository
 router = APIRouter()
 
 user_repository: UserRepository = di[UserRepository]
-create_user_use_case = CreateUserUseCase()
+create_user_use_case = CreateUserUseCase(user_repository)
 
 
 @router.get("/users", tags=["users"])
