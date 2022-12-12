@@ -6,10 +6,12 @@ from fastapi.testclient import TestClient
 from main import app
 from src.bootstrap import bootstrap_di
 from src.domain.__tests__.e2e.mocks.user import users
-from src.domain.__tests__.e2e.utils import UserSeed, Sqlite3, generate_token_user
+from src.domain.__tests__.e2e.utils import (
+    UserSeed, Sqlite3, generate_token_user
+)
+
 
 bootstrap_di()
-
 client = TestClient(app)
 
 
@@ -20,11 +22,14 @@ def run_around_tests():
     UserSeed.remove_all()
 
 
+endpoint = "/users"
+token_endpoint = "/token"
+
+
 class TestFindUser:
-    endpoint = "/users"
 
     def test_find_all_users_without_pagination(self):
-        response = client.get(self.endpoint)
+        response = client.get(endpoint)
         assert len(response.json().get("users")) == 10
 
     def test_find_all_users_with_limit_pagination(self):
@@ -52,49 +57,53 @@ class TestFindUser:
         assert response.status_code == 404
 
 
+email = "string@gmail.com"
+
+
 class TestCreateUser:
-    endpoint = "/users"
+
+    value_missing = "value_error.missing"
 
     def test_create_user_with_valid_args(self):
-        data: Mapping[str, str] = {"name": "string", "email": "string@gmail.com", "password": "string"}
-        response = client.post(self.endpoint, json=data)
+        data: Mapping[str, str] = {
+            "name": "string", "email": email, "password": "string"}
+        response = client.post(endpoint, json=data)
         assert response.json().get("user") is not None
 
     def test_create_user_with_missing_email(self):
         data: Mapping[str, str] = {"name": "string", "password": "string"}
-        response = client.post(self.endpoint, json=data)
+        response = client.post(endpoint, json=data)
         error = response.json().get("detail")[0]
         assert "email" in error.get("loc")
-        assert error.get("type") == "value_error.missing"
+        assert error.get("type") == self.value_missing
 
     def test_create_user_with_missing_password(self):
         data = {
-                "name": "string",
-                "email": "string@gmail.com",
-            }
-        response = client.post(self.endpoint, json=data)
+            "name": "string",
+            "email": email,
+        }
+        response = client.post(endpoint, json=data)
         error = response.json().get("detail")[0]
         assert "password" in error.get("loc")
-        assert error.get("type") == "value_error.missing"
+        assert error.get("type") == self.value_missing
 
     def test_create_user_with_missing_name(self):
-        data = {"email": "string@gmail.com", "password": "string"}
-        response = client.post(self.endpoint, json=data)
+        data = {"email": email, "password": "string"}
+        response = client.post(endpoint, json=data)
         error = response.json().get("detail")[0]
         assert "name" in error.get("loc")
-        assert error.get("type") == "value_error.missing"
+        assert error.get("type") == self.value_missing
         assert response.status_code == 422
 
     def test_create_user_with_invalid_email(self):
         data = {"name": "string", "email": "string", "password": "string"}
-        response = client.post(self.endpoint, json=data)
+        response = client.post(endpoint, json=data)
         error = response.json().get("detail")[0]
         assert "email" in error.get("loc")
         assert error.get("type") == "value_error"
 
 
 class TestInactivateUser:
-    endpoint = "/users"
 
     def test_inactivate_user_with_a_valid_user(self):
         user = Sqlite3.find_by_id(1)
@@ -111,16 +120,15 @@ class TestInactivateUser:
 
 
 class TestUpdateUser:
-    endpoint = "/users"
 
     def test_update_user_with_valid_args(self):
         data = {
-                "id": 1,
-                "name": "name_updated",
-                "email": "string_updated@gmail.com",
-                "password": "string",
-            }
-        response = client.patch(self.endpoint, json=data)
+            "id": 1,
+            "name": "name_updated",
+            "email": email,
+            "password": "string",
+        }
+        response = client.patch(endpoint, json=data)
         assert response.json().get("user", {}).get("name") == "name_updated"
         assert (
             response.json().get("user", {}).get("email") == "string_updated@gmail.com"
@@ -128,21 +136,21 @@ class TestUpdateUser:
 
     def test_update_user_with_specific_fields(self):
         data = {
-                "id": 1,
-                "name": "name_updated",
-            }
-        response = client.patch(self.endpoint, json=data)
+            "id": 1,
+            "name": "name_updated",
+        }
+        response = client.patch(endpoint, json=data)
         assert response.json().get("user", {}).get("name") == "name_updated"
         assert response.json().get("user", {}).get("email") == "admin1@gmail.com"
 
     def test_update_user_with_invalid_userid(self):
         data = {
-                "id": "111111111111111111111112",
-                "name": "name_updated",
-                "email": "string_updated@gmail.com",
-                "password": "string",
-            }
-        response = client.patch(self.endpoint, json=data)
+            "id": "111111111111111111111112",
+            "name": "name_updated",
+            "email": "string_updated@gmail.com",
+            "password": "string",
+        }
+        response = client.patch(endpoint, json=data)
         error = response.json().get("detail")[0]
         assert "user_id" in error.get("loc")
         assert error.get("msg") == "User not found"
@@ -150,24 +158,24 @@ class TestUpdateUser:
 
     def test_update_user_with_invalid_email(self):
         data = {
-                "id": 1,
-                "name": "name_updated",
-                "email": "admin@sqs",
-                "password": "string",
-            }
-        response = client.patch(self.endpoint, json=data)
+            "id": 1,
+            "name": "name_updated",
+            "email": "admin@sqs",
+            "password": "string",
+        }
+        response = client.patch(endpoint, json=data)
         error = response.json().get("detail")[0]
         assert "email" in error.get("loc")
         assert error.get("type") == "value_error"
 
     def test_update_user_with_already_registered_email(self):
         data = {
-                "id": 1,
-                "name": "name_updated",
-                "email": "admin2@gmail.com",
-                "password": "string",
-            }
-        response = client.patch(self.endpoint, json=data)
+            "id": 1,
+            "name": "name_updated",
+            "email": "admin2@gmail.com",
+            "password": "string",
+        }
+        response = client.patch(endpoint, json=data)
         error = response.json().get("detail")[0]
         assert "email" in error.get("loc")
         assert error.get("msg") == "Email already registered"
@@ -175,16 +183,17 @@ class TestUpdateUser:
 
 
 class TestDeleteUser:
-    endpoint = "/users"
 
     def test_delete_user_with_a_valid_user(self):
         response = client.delete(
-            self.endpoint, headers={"Authorization": f"Bearer {generate_token_user(client)}"}
+            endpoint, headers={
+                "Authorization": f"Bearer {generate_token_user(client)}"}
         )
         assert response.json().get("message") == "deleted"
 
         user = Sqlite3.find_by_id(1)
-        original_user = list(filter(lambda user: user.get("id") == 1, users))[0]
+        original_user = list(
+            filter(lambda user: user.get("id") == 1, users))[0]
         assert user.name != original_user.get("name")
         assert user.email != original_user.get("email")
         assert user.password != original_user.get("password")
@@ -194,22 +203,23 @@ class TestDeleteUser:
 
 
 class TestAuthUser:
+
     def test_authenticate_user_with_correct_credentials(self):
         data = {"username": "admin1@gmail.com", "password": "admin"}
-        response = client.post("/token", data=data)
+        response = client.post(token_endpoint, data=data)
         assert response.json().get("access_token") is not None
         assert response.json().get("token_type") == "bearer"
 
     def test_authenticate_user_with_incorrect_password(self):
         data = {"username": "admin@gmail.com", "password": "admin2"}
-        response = client.post("/token", data=data)
+        response = client.post(token_endpoint, data=data)
         assert response.status_code == 401
         assert response.json().get("detail") is not None
         assert response.json().get("detail") == "Incorrect username or password"
 
     def test_authenticate_user_with_incorrect_email(self):
         data = {"username": "incorrect@gmail.com", "password": "admin"}
-        response = client.post("/token", data=data)
+        response = client.post(token_endpoint, data=data)
         assert response.status_code == 401
         assert response.json().get("detail") is not None
         assert response.json().get("detail") == "Incorrect username or password"

@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-import bcrypt
+from kink import di
 from datetime import timedelta
 from typing import Tuple, Optional
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from kink import di
 
-from src.domain.user.entity import User
+from src.domain.user.entities import User
 from src.infra.database import get_db
 from src.infra.api.routers.errors import UserNotFound, EmailAlreadyRegistered
 from src.infra.api.routers.dtos.user import CreateUserInput, UpdateUserInput, Token
@@ -18,7 +17,7 @@ from src.infra.gateways.jwt import (
 )
 from src.infra.gateways.auth import get_current_active_user
 from src.usecases.create.create_user_use_case import CreateUserUseCase
-from src.domain.user.repository import UserRepository
+from src.domain.user.repositories import UserRepository
 
 router = APIRouter()
 

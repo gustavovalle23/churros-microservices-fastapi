@@ -4,6 +4,7 @@ from datetime import datetime
 from dataclasses import dataclass
 
 from src.__shared.domain.entities import Entity
+from src.domain.user.value_objects import Address
 
 
 @dataclass(frozen=True)
@@ -13,7 +14,9 @@ class User(Entity):
     email: str
     password: str
     active: bool
-    created_at: Optional[datetime] = None
+    points: int = 0
+    address: Address = None
+    created_at: Optional[datetime] = datetime.now()
     updated_at: Optional[datetime] = None
 
     def activate(self):

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import bcrypt
-from kink import di
 from dataclasses import dataclass
 from sqlalchemy.orm import Session
 
 from src.__shared.application.use_cases import UseCase
-from src.domain.user.repository import UserRepository
+from src.domain.user.repositories import UserRepository
 
 
 @dataclass(slots=True, frozen=True)

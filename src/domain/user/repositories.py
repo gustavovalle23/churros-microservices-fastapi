@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from abc import ABC
 from typing import Tuple
 
-from src.domain.user.entity import User
+from src.domain.user.entities import User
 
 
 class UserRepository(ABC):
