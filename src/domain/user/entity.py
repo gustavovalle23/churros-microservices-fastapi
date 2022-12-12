@@ -3,12 +3,12 @@ from typing import Optional
 from datetime import datetime
 from dataclasses import dataclass
 
-from src.__shared.entity import Entity
+from src.__shared.domain.entities import Entity
 
 
-@dataclass(slots=True, frozen=True)
+@dataclass(frozen=True)
 class User(Entity):
-    id: str
+    id: int
     name: str
     email: str
     password: str

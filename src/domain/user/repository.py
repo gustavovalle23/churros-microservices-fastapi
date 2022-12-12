@@ -19,7 +19,7 @@ class UserRepository(ABC):
         """
         pass
 
-    def find_by_id(self, db: Session, user_id: str) -> User | None:
+    def find_by_id(self, db: Session, user_id: int) -> User | None:
         """
         Method responsable for find user by email
         """
@@ -37,13 +37,13 @@ class UserRepository(ABC):
         """
         pass
 
-    def inactivate(self, db: Session, user_id: str) -> None:
+    def inactivate(self, db: Session, user_id: int) -> None:
         """
         Method responsable for inactive user
         """
         pass
 
-    def delete(self, db: Session, user_id: str) -> None:
+    def delete(self, db: Session, user_id: int) -> None:
         """
         Method responsable for delete user
         """

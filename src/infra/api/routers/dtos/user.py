@@ -22,7 +22,7 @@ class CreateUserInput(BaseModel):
 
 
 class UpdateUserInput(BaseModel):
-    id: str
+    id: int
     email: Optional[str] = None
     name: Optional[str] = None
 
@@ -35,7 +35,7 @@ class UpdateUserInput(BaseModel):
 
 
 class User(BaseModel):
-    id: str
+    id: int
     name: str
     email: str
     password: str
