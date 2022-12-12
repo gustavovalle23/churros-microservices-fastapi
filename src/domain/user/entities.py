@@ -25,6 +25,9 @@ class User(Entity):
     def __post_init__(self):
         self.validate()
 
+    def increase_points(self, points: int):
+        self.points += points
+
     def validate(self):
         from src.domain.user.factories import UserValidatorFactory
 
