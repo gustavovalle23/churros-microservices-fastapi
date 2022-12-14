@@ -2,8 +2,8 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from src.__shared.use_cases import UseCase
-from src.usecases.create.create_user_use_case import CreateUserUseCase
+from src.__shared.application.use_cases import UseCase
+from src.application.usecases.create.create_user_use_case import CreateUserUseCase
 from src.infra.user.repositories.user import UserSqlachemyRepository
 
 

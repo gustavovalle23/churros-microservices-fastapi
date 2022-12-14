@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-import bcrypt
+from kink import di
 from datetime import timedelta
 from typing import Tuple, Optional
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from kink import di
 
-from src.domain.user.entity import User
+from src.domain.user.entities import User
 from src.infra.database import get_db
 from src.infra.api.routers.errors import UserNotFound, EmailAlreadyRegistered
 from src.infra.api.routers.dtos.user import CreateUserInput, UpdateUserInput, Token
@@ -17,8 +16,8 @@ from src.infra.gateways.jwt import (
     create_access_token,
 )
 from src.infra.gateways.auth import get_current_active_user
-from src.usecases.create.create_user_use_case import CreateUserUseCase
-from src.domain.user.repository import UserRepository
+from src.application.usecases.create.create_user_use_case import CreateUserUseCase
+from src.domain.user.repositories import UserRepository
 
 router = APIRouter()
 
@@ -33,7 +32,7 @@ async def find_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_d
 
 
 @router.get("/users/{user_id}", tags=["users"])
-async def find_user(user_id: str, db: Session = Depends(get_db)):
+async def find_user(user_id: int, db: Session = Depends(get_db)):
     user: Optional[User] = user_repository.find_by_id(db, user_id)
     if not user:
         return UserNotFound()

@@ -6,7 +6,7 @@ from typing import Tuple
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import true
 
-from src.domain.user.entity import User
+from src.domain.user.entities import User
 from src.domain.user.factories import UserFactory
 from src.infra.database import UserModel
 from src.infra.api.routers.dtos.user import CreateUserInput, UpdateUserInput
@@ -28,7 +28,7 @@ class UserSqlachemyRepository:
             return
         return UserFactory.create(user)
 
-    def find_by_id(self, db: Session, user_id: str) -> User | None:
+    def find_by_id(self, db: Session, user_id: int) -> User | None:
         user = (
             db.query(UserModel)
             .filter(UserModel.id == user_id)
@@ -56,11 +56,11 @@ class UserSqlachemyRepository:
         updated_user = db.query(UserModel).filter(UserModel.id == update_user_input.id).first()
         return UserFactory.create(updated_user)
 
-    def inactivate(self, db: Session, user_id: str) -> None:
+    def inactivate(self, db: Session, user_id: int) -> None:
         db.query(UserModel).filter(UserModel.id == user_id).update({"active": False})
         db.commit()
 
-    def delete(self, db: Session, user_id: str) -> None:
+    def delete(self, db: Session, user_id: int) -> None:
         db.query(UserModel).filter(UserModel.id == user_id).update(
             {
                 "email": self.random_string(),

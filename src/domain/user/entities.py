@@ -3,17 +3,19 @@ from typing import Optional
 from datetime import datetime
 from dataclasses import dataclass
 
-from src.__shared.entity import Entity
+from src.__shared.domain.entities import Entity
+from src.domain.user.value_objects import Address
 
 
-@dataclass(slots=True, frozen=True)
+@dataclass(frozen=True)
 class User(Entity):
-    id: str
     name: str
     email: str
     password: str
     active: bool
-    created_at: Optional[datetime] = None
+    points: int = 0
+    address: Address = None
+    created_at: Optional[datetime] = datetime.now()
     updated_at: Optional[datetime] = None
 
     def activate(self):
@@ -21,6 +23,9 @@ class User(Entity):
 
     def __post_init__(self):
         self.validate()
+
+    def increase_points(self, points: int):
+        self.points += points
 
     def validate(self):
         from src.domain.user.factories import UserValidatorFactory
