@@ -50,7 +50,7 @@ class TestFindUser:
         assert response.json().get("user") is not None
 
     def test_should_return_error_when_not_find_user_by_id(self):
-        response = client.get("/users/211111111111111111111111")
+        response = client.get("/users/123")
         error = response.json().get("detail")[0]
         assert "user_id" in error.get("loc")
         assert error.get("msg") == "User not found"
@@ -131,7 +131,7 @@ class TestUpdateUser:
         response = client.patch(endpoint, json=data)
         assert response.json().get("user", {}).get("name") == "name_updated"
         assert (
-            response.json().get("user", {}).get("email") == "string_updated@gmail.com"
+            response.json().get("user", {}).get("email") == email
         )
 
     def test_update_user_with_specific_fields(self):
@@ -145,7 +145,7 @@ class TestUpdateUser:
 
     def test_update_user_with_invalid_userid(self):
         data = {
-            "id": "111111111111111111111112",
+            "id": "112",
             "name": "name_updated",
             "email": "string_updated@gmail.com",
             "password": "string",

@@ -9,10 +9,6 @@ class Entity(ABC):
 
     id: int
 
-    @property
-    def id(self):
-        return self.id
-
     def _set(self, name: str, value: Any):
         object.__setattr__(self, name, value)
         return self

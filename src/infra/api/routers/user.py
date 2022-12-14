@@ -16,7 +16,7 @@ from src.infra.gateways.jwt import (
     create_access_token,
 )
 from src.infra.gateways.auth import get_current_active_user
-from src.usecases.create.create_user_use_case import CreateUserUseCase
+from src.application.usecases.create.create_user_use_case import CreateUserUseCase
 from src.domain.user.repositories import UserRepository
 
 router = APIRouter()

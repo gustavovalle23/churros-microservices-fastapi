@@ -9,7 +9,6 @@ from src.domain.user.value_objects import Address
 
 @dataclass(frozen=True)
 class User(Entity):
-    id: int
     name: str
     email: str
     password: str
