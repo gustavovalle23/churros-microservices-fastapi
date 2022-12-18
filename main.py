@@ -3,7 +3,7 @@ from fastapi import FastAPI
 import uvicorn
 
 from src.infra.database import Base, engine
-from src.infra.api.routers.user import router
+from src.api.routers.user import router
 
 Base.metadata.create_all(bind=engine)
 

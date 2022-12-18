@@ -1,7 +1,7 @@
 from typing import Any
 
-from src.domain.user.validators import UserValidator
-from src.domain.user.entities import User
+from src.user.domain.validators import UserValidator
+from src.user.domain.entities import User
 
 
 class UserValidatorFactory:

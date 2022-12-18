@@ -2,9 +2,9 @@
 import abc
 from abc import ABC
 from dataclasses import dataclass
-from typing import Any, Dict, Generic, List, TypeVar
+from typing import Any, Dict, List, TypeVar, Generic
 
-from src.__shared.domain.exceptions import ValidationException
+from src.__seedwork.domain.exceptions import ValidationException
 
 
 @dataclass(frozen=True)

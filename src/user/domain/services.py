@@ -1,6 +1,6 @@
 from typing import List, Callable, Tuple
 
-from src.domain.user.entities import User
+from src.user.domain.entities import User
 
 
 class UserService:

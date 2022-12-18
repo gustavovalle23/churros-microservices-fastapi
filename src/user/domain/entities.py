@@ -3,8 +3,8 @@ from typing import Optional
 from datetime import datetime
 from dataclasses import dataclass
 
-from src.__shared.domain.entities import Entity
-from src.domain.user.value_objects import Address
+from src.__seedwork.domain.entities import Entity
+from src.user.domain.value_objects import Address
 
 
 @dataclass(frozen=True)
@@ -28,7 +28,7 @@ class User(Entity):
         self.points += points
 
     def validate(self):
-        from src.domain.user.factories import UserValidatorFactory
+        from src.user.domain.factories import UserValidatorFactory
 
         validator = UserValidatorFactory.create()
         is_valid = validator.validate(self)

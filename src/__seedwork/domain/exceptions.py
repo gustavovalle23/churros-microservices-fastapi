@@ -1,4 +1,4 @@
-from src.__shared.domain.validators import ErrorFields
+from src.__seedwork.domain.validators import ErrorFields
 
 
 class ValidationException(Exception):

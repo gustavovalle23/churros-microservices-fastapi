@@ -5,8 +5,8 @@ from fastapi.testclient import TestClient
 
 from main import app
 from src.bootstrap import bootstrap_di
-from src.domain.__tests__.e2e.mocks.user import users
-from src.domain.__tests__.e2e.utils import (
+from src.user.domain.__tests__.e2e.mocks.user import users
+from src.user.domain.__tests__.e2e.utils import (
     UserSeed, Sqlite3, generate_token_user
 )
 

@@ -3,8 +3,8 @@ import bcrypt
 from dataclasses import dataclass
 from sqlalchemy.orm import Session
 
-from src.__shared.application.use_cases import UseCase
-from src.domain.user.repositories import UserRepository
+from src.__seedwork.application.use_cases import UseCase
+from src.user.domain.repositories import UserRepository
 
 
 @dataclass(slots=True, frozen=True)

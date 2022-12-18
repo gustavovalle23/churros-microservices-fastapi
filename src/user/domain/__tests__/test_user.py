@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-from src.domain.user.entities import User
+from src.user.domain.entities import User
 
 
 def test_should_raise_error_when_email_is_empty():

@@ -5,7 +5,7 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, status, HTTPException
 
-from src.domain.user.entities import User
+from src.user.domain.entities import User
 from src.infra.database import get_db
 from src.infra.gateways.jwt import ALGORITHM, SECRET_KEY
 from src.infra.user.repositories.user import UserSqlachemyRepository
