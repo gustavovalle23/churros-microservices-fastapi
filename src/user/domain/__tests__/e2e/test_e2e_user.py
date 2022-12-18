@@ -141,7 +141,8 @@ class TestUpdateUser:
         }
         response = client.patch(endpoint, json=data)
         assert response.json().get("user", {}).get("name") == "name_updated"
-        assert response.json().get("user", {}).get("email") == "admin1@gmail.com"
+        assert response.json().get(
+            "user", {}).get("email") == "admin1@gmail.com"
 
     def test_update_user_with_invalid_userid(self):
         data = {
@@ -215,11 +216,13 @@ class TestAuthUser:
         response = client.post(token_endpoint, data=data)
         assert response.status_code == 401
         assert response.json().get("detail") is not None
-        assert response.json().get("detail") == "Incorrect username or password"
+        assert response.json().get(
+            "detail") == "Incorrect username or password"
 
     def test_authenticate_user_with_incorrect_email(self):
         data = {"username": "incorrect@gmail.com", "password": "admin"}
         response = client.post(token_endpoint, data=data)
         assert response.status_code == 401
         assert response.json().get("detail") is not None
-        assert response.json().get("detail") == "Incorrect username or password"
+        assert response.json().get(
+            "detail") == "Incorrect username or password"

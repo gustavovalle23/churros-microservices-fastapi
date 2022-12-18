@@ -33,7 +33,11 @@ class ValidatorRules:
         return self
 
     def boolean(self) -> 'ValidatorRules':
-        if self.value is not None and self.value is not True and self.value is not False:
+        if (
+            self.value is not None
+            and self.value is not True
+            and self.value is not False
+        ):
             raise ValidationException(f'The {self.prop} must be a boolean')
         return self
 

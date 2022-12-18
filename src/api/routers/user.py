@@ -16,7 +16,9 @@ from src.infra.gateways.jwt import (
     create_access_token,
 )
 from src.infra.gateways.auth import get_current_active_user
-from src.user.application.usecases.create.create_user_use_case import CreateUserUseCase
+from src.user.application.usecases.create.create_user_use_case import (
+    CreateUserUseCase
+)
 from src.user.domain.repositories import UserRepository
 
 router = APIRouter()
@@ -26,7 +28,11 @@ create_user_use_case = CreateUserUseCase(user_repository)
 
 
 @router.get("/users", tags=["users"])
-async def find_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+async def find_users(
+            skip: int = 0,
+            limit: int = 10,
+            db: Session = Depends(get_db)
+        ):
     users: Tuple[User] = user_repository.find_all(db, skip, limit)
     return {"users": users}
 
@@ -47,7 +53,8 @@ async def create_user(user: CreateUserInput, db: Session = Depends(get_db)):
 
 @router.post("/users/inactivate", tags=["users"])
 async def inactivate_user(
-    db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     user: Optional[User] = user_repository.find_by_id(db, current_user.id)
     if not user:
@@ -85,7 +92,8 @@ async def delete_user(
 
 @router.post("/token", response_model=Token, tags=["users"])
 async def login(
-    form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
 ):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:

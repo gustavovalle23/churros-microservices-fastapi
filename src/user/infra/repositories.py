@@ -13,7 +13,11 @@ from src.api.routers.dtos.user import CreateUserInput, UpdateUserInput
 
 
 class UserSqlachemyRepository:
-    def find_all(self, db: Session, skip: int = 0, limit: int = 100) -> Tuple[User]:
+    def find_all(self,
+                 db: Session,
+                 skip: int = 0,
+                 limit: int = 100) -> Tuple[User]:
+
         users = (
             db.query(UserModel)
             .filter(UserModel.active == true())
@@ -53,11 +57,15 @@ class UserSqlachemyRepository:
         db.query(UserModel).filter(UserModel.id == user_id).update(data)
         db.commit()
 
-        updated_user = db.query(UserModel).filter(UserModel.id == update_user_input.id).first()
+        updated_user = db.query(UserModel).filter(
+                UserModel.id == update_user_input.id
+            ).first()
         return UserFactory.create(updated_user)
 
     def inactivate(self, db: Session, user_id: int) -> None:
-        db.query(UserModel).filter(UserModel.id == user_id).update({"active": False})
+        db.query(UserModel).filter(
+                    UserModel.id == user_id
+                ).update({"active": False})
         db.commit()
 
     def delete(self, db: Session, user_id: int) -> None:
@@ -74,5 +82,6 @@ class UserSqlachemyRepository:
     @staticmethod
     def random_string(size=10):
         return "".join(
-            random.choice(string.ascii_lowercase + string.digits) for _ in range(size)
+            random.choice(
+                string.ascii_lowercase + string.digits) for _ in range(size)
         )

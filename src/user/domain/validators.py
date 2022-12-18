@@ -9,7 +9,8 @@ class UserValidator:
     def validate(self, user) -> bool:
         errors = []
         regex = re.compile(
-            r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+            r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+'
+        )
 
         if not bool(re.fullmatch(regex, user.email)):
             errors.append("email: Should be a valid e-mail!")
