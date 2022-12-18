@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from src.__seedwork.application.use_cases import UseCase
 from src.user.application.usecases.create.create_user_use_case import CreateUserUseCase
-from src.infra.user.repositories.user import UserSqlachemyRepository
+from src.user.infra.repositories import UserSqlachemyRepository
 
 
 class TestCreateUserUseCaseUnit(TestCase):

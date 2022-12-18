@@ -5,7 +5,7 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 
-from src.infra.user.repositories.user import UserSqlachemyRepository
+from src.user.infra.repositories import UserSqlachemyRepository
 
 user_repository = UserSqlachemyRepository()
 
