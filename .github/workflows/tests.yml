@@ -28,9 +28,7 @@ jobs:
           poetry install
       - name: Run tests
         run: |
-          poetry run flake8 src
           poetry run black --check src
-          poetry run mypy -p src
           poetry run python -m pytest
           poetry run poetry check
           poetry run pip check
