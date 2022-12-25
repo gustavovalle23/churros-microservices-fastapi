@@ -2,7 +2,7 @@
 from kink import di
 
 from src.user.domain.repositories import UserRepository
-from user.infra.repositories import UserSqlachemyRepository
+from src.user.infra.repositories import UserSqlachemyRepository
 
 
 def bootstrap_di() -> None:
