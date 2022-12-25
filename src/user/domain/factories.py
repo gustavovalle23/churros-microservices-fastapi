@@ -11,7 +11,6 @@ class UserValidatorFactory:
 
 
 class UserFactory:
-
     @staticmethod
     def create(user: Any) -> User:
 

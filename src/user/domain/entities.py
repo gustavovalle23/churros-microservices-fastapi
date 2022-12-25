@@ -14,18 +14,18 @@ class User(Entity):
     password: str
     active: bool
     points: int = 0
-    address: Address = None
-    created_at: Optional[datetime] = datetime.now()
+    address: Optional[Address] = None
+    created_at: datetime = datetime.now()
     updated_at: Optional[datetime] = None
 
     def activate(self):
-        self.__setattr__('active', True)
+        self.__setattr__("active", True)
 
     def __post_init__(self):
         self.validate()
 
     def increase_points(self, points: int):
-        self.points += points
+        self.__setattr__("points", self.points + points)
 
     def validate(self):
         from src.user.domain.factories import UserValidatorFactory

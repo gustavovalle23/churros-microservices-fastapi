@@ -6,9 +6,7 @@ from fastapi.testclient import TestClient
 from main import app
 from src.bootstrap import bootstrap_di
 from src.user.domain.__tests__.e2e.mocks.user import users
-from src.user.domain.__tests__.e2e.utils import (
-    UserSeed, Sqlite3, generate_token_user
-)
+from src.user.domain.__tests__.e2e.utils import UserSeed, Sqlite3, generate_token_user
 
 
 bootstrap_di()
@@ -27,7 +25,6 @@ token_endpoint = "/token"
 
 
 class TestFindUser:
-
     def test_find_all_users_without_pagination(self):
         response = client.get(endpoint)
         assert len(response.json().get("users")) == 10
@@ -66,7 +63,10 @@ class TestCreateUser:
 
     def test_create_user_with_valid_args(self):
         data: Mapping[str, str] = {
-            "name": "string", "email": email, "password": "string"}
+            "name": "string",
+            "email": email,
+            "password": "string",
+        }
         response = client.post(endpoint, json=data)
         assert response.json().get("user") is not None
 
@@ -104,7 +104,6 @@ class TestCreateUser:
 
 
 class TestInactivateUser:
-
     def test_inactivate_user_with_a_valid_user(self):
         user = Sqlite3.find_by_id(1)
         assert user.active is True
@@ -120,7 +119,6 @@ class TestInactivateUser:
 
 
 class TestUpdateUser:
-
     def test_update_user_with_valid_args(self):
         data = {
             "id": 1,
@@ -130,9 +128,7 @@ class TestUpdateUser:
         }
         response = client.patch(endpoint, json=data)
         assert response.json().get("user", {}).get("name") == "name_updated"
-        assert (
-            response.json().get("user", {}).get("email") == email
-        )
+        assert response.json().get("user", {}).get("email") == email
 
     def test_update_user_with_specific_fields(self):
         data = {
@@ -141,8 +137,7 @@ class TestUpdateUser:
         }
         response = client.patch(endpoint, json=data)
         assert response.json().get("user", {}).get("name") == "name_updated"
-        assert response.json().get(
-            "user", {}).get("email") == "admin1@gmail.com"
+        assert response.json().get("user", {}).get("email") == "admin1@gmail.com"
 
     def test_update_user_with_invalid_userid(self):
         data = {
@@ -184,17 +179,14 @@ class TestUpdateUser:
 
 
 class TestDeleteUser:
-
     def test_delete_user_with_a_valid_user(self):
         response = client.delete(
-            endpoint, headers={
-                "Authorization": f"Bearer {generate_token_user(client)}"}
+            endpoint, headers={"Authorization": f"Bearer {generate_token_user(client)}"}
         )
         assert response.json().get("message") == "deleted"
 
         user = Sqlite3.find_by_id(1)
-        original_user = list(
-            filter(lambda user: user.get("id") == 1, users))[0]
+        original_user = list(filter(lambda user: user.get("id") == 1, users))[0]
         assert user.name != original_user.get("name")
         assert user.email != original_user.get("email")
         assert user.password != original_user.get("password")
@@ -204,7 +196,6 @@ class TestDeleteUser:
 
 
 class TestAuthUser:
-
     def test_authenticate_user_with_correct_credentials(self):
         data = {"username": "admin1@gmail.com", "password": "admin"}
         response = client.post(token_endpoint, data=data)
@@ -216,13 +207,11 @@ class TestAuthUser:
         response = client.post(token_endpoint, data=data)
         assert response.status_code == 401
         assert response.json().get("detail") is not None
-        assert response.json().get(
-            "detail") == "Incorrect username or password"
+        assert response.json().get("detail") == "Incorrect username or password"
 
     def test_authenticate_user_with_incorrect_email(self):
         data = {"username": "incorrect@gmail.com", "password": "admin"}
         response = client.post(token_endpoint, data=data)
         assert response.status_code == 401
         assert response.json().get("detail") is not None
-        assert response.json().get(
-            "detail") == "Incorrect username or password"
+        assert response.json().get("detail") == "Incorrect username or password"
