@@ -28,12 +28,10 @@ jobs:
           poetry install
       - name: Run tests
         run: |
-          source "$HOME/.poetry/env"
-
-          poetry run flake8 .
+          poetry run flake8 src
           poetry run black --check src
-          poetry run mypy src
-          poetry run pytest
+          poetry run mypy -p src
+          poetry run python -m pytest
           poetry run poetry check
           poetry run pip check
       - name: Upload coverage to Codecov
