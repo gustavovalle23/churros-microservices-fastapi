@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 from src.__seedwork.domain.entities import Entity
 from src.user.domain.value_objects import Address
+from src.user.domain.errors import NotificationError
 
 
 @dataclass(frozen=True)
@@ -18,11 +19,11 @@ class User(Entity):
     created_at: datetime = datetime.now()
     updated_at: Optional[datetime] = None
 
-    def activate(self):
-        self.__setattr__("active", True)
-
     def __post_init__(self):
         self.validate()
+
+    def activate(self):
+        self.__setattr__("active", True)
 
     def increase_points(self, points: int):
         self.__setattr__("points", self.points + points)
@@ -31,7 +32,7 @@ class User(Entity):
         from src.user.domain.factories import UserValidatorFactory
 
         validator = UserValidatorFactory.create()
-        is_valid = validator.validate(self)
+        validator.validate(self)
 
-        if not is_valid:
-            raise ValueError(validator.errors)
+        if validator.has_errors():
+            raise NotificationError(validator.errors)
