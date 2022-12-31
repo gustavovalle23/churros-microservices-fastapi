@@ -1,11 +1,11 @@
 # Restaurant System
 
 Patterns and Concepts used:
-- [ ] Unit Test;
-- [ ] Integration Test;
-- [ ] Domain Driven Design;
-- [ ] Clean Architecture;
-- [ ] Microservice;
+- [x] Unit Test;
+- [x] Integration Test;
+- [x] Domain Driven Design;
+- [x] Clean Architecture;
+- [x] Microservice;
 - [ ] Notification Pattern;
 - [ ] Event Sourcing;
 
