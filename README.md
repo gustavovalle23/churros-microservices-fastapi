@@ -6,7 +6,8 @@ Patterns and Concepts used:
 - [x] Domain Driven Design;
 - [x] Clean Architecture;
 - [x] Microservice;
-- [ ] Notification Pattern;
+- [x] Poetry as packaging and dependency management
+- [x] Notification Pattern;
 - [ ] Event Sourcing;
 
 
