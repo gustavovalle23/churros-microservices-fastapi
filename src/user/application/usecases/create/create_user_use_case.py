@@ -3,8 +3,10 @@ import bcrypt
 from dataclasses import dataclass
 from sqlalchemy.orm import Session
 
-from src.__seedwork.application.use_cases import UseCase
+from src.user.domain.entities import User
 from src.user.domain.repositories import UserRepository
+from src.__seedwork.application.use_cases import UseCase
+from src.user.domain.errors import EmailAlreadyRegisteredError
 
 
 @dataclass(slots=True, frozen=True)
@@ -28,10 +30,8 @@ class CreateUserUseCase(UseCase):
     user_repository: UserRepository
 
     def execute(self, input_use_case: Input, db: Session) -> Output:
-        input_use_case.__setattr__(
-            "password",
-            bcrypt.hashpw(input_use_case.password.encode(), bcrypt.gensalt()),
-        )
+        if self.user_repository.find_by_email(db, input_use_case.email):
+            raise EmailAlreadyRegisteredError(input_use_case.email)
 
-        user_created = self.user_repository.save(db, input_use_case)
+        user_created: User = self.user_repository.save(db, input_use_case)
         return Output(user_created.name, user_created.email, user_created.active)

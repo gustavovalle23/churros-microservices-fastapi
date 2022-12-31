@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import bcrypt
 import random
 import string
 from typing import Tuple
@@ -38,12 +39,15 @@ class UserSqlachemyRepository:
         )
         if not user:
             return
+
         return UserFactory.create(user)
 
     def save(self, db: Session, input: CreateUserInput) -> User:
+        input.password = bcrypt.hashpw(input.password.encode(), bcrypt.gensalt())
         user = UserModel(**json.loads(input.json()))
         db.add(user)
         db.commit()
+
         return UserFactory.create(user)
 
     def update(self, db: Session, update_user_input: UpdateUserInput) -> User:
