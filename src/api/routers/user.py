@@ -10,12 +10,12 @@ from src.user.domain.entities import User
 from src.database.models import get_db
 from src.api.routers.errors import UserNotFound, EmailAlreadyRegistered
 from src.api.routers.dtos.user import CreateUserInput, UpdateUserInput, Token
-from src.user.infra.jwt import (
+from src.user.infra.gateways.jwt import (
     authenticate_user,
     ACCESS_TOKEN_EXPIRE_MINUTES,
     create_access_token,
 )
-from src.user.infra.auth import get_current_active_user
+from src.user.infra.gateways.auth import get_current_active_user
 from src.user.application.usecases.create.create_user_use_case import CreateUserUseCase
 from src.user.domain.repositories import UserRepository
 
