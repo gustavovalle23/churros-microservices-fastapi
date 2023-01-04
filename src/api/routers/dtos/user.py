@@ -20,6 +20,17 @@ class CreateUserInput(BaseModel):
             raise ValueError("Invalid e-mail")
         return value
 
+    class Config:
+        validate_assignment = True
+
+
+class FindUserInput(BaseModel):
+    email: Optional[str]
+    id: Optional[int]
+
+    class Config:
+        validate_assignment = True
+
 
 class UpdateUserInput(BaseModel):
     id: int
@@ -33,6 +44,9 @@ class UpdateUserInput(BaseModel):
             raise ValueError("Invalid e-mail")
         return value
 
+    class Config:
+        validate_assignment = True
+
 
 class User(BaseModel):
     id: int
@@ -41,7 +55,13 @@ class User(BaseModel):
     password: str
     active: bool
 
+    class Config:
+        validate_assignment = True
+
 
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+    class Config:
+        validate_assignment = True

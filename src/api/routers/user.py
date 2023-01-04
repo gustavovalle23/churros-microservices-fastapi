@@ -3,28 +3,37 @@ from kink import di
 from datetime import timedelta
 from typing import Tuple, Optional
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm as OAuthForm
 
-from src.user.domain.entities import User
-from src.database.models import get_db
 from src.api.routers.errors import (
-    UserNotFound, EmailAlreadyRegistered, IncorrectUsernameOrPassword
+    UserNotFound,
+    EmailAlreadyRegistered,
+    IncorrectUsernameOrPassword,
 )
-from src.api.routers.dtos.user import CreateUserInput, UpdateUserInput, Token
 from src.user.infra.gateways.jwt import (
     authenticate_user,
     ACCESS_TOKEN_EXPIRE_MINUTES,
     create_access_token,
 )
-from src.user.infra.gateways.auth import get_current_active_user
-from src.user.application.usecases.create.create_user_use_case import CreateUserUseCase
+from src.database.models import get_db
+from src.user.domain.entities import User
 from src.user.domain.repositories import UserRepository
+from src.user.infra.gateways.auth import get_current_active_user
+from src.api.routers.dtos.user import (
+    CreateUserInput,
+    FindUserInput,
+    UpdateUserInput,
+    Token,
+)
+from src.user.application.usecases.create import CreateUserUseCase
+from src.user.application.usecases.find import FindUserUseCase
 
 router = APIRouter()
 
 user_repository: UserRepository = di[UserRepository]
 create_user_use_case = CreateUserUseCase(user_repository)
+find_user_use_case = FindUserUseCase(user_repository)
 
 
 @router.get("/users", tags=["users"])
@@ -34,10 +43,8 @@ async def find_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_d
 
 
 @router.get("/users/{user_id}", tags=["users"])
-async def find_user(user_id: int, db: Session = Depends(get_db)):
-    user: Optional[User] = user_repository.find_by_id(db, user_id)
-    if not user:
-        return UserNotFound()
+async def find_user(args: FindUserInput, db: Session = Depends(get_db)):
+    user = find_user_use_case.execute(args, db)
     return {"user": user}
 
 
