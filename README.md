@@ -9,6 +9,10 @@ Patterns and Concepts used:
 - [x] Poetry as packaging and dependency management
 - [x] Notification Pattern;
 - [ ] Event Sourcing;
+- [ ] Docker;
+- [ ] Docker Compose;
+- [ ] Kubernetes;
+- [ ] Mongodb Clustering;
 
 
 ## Basic Diagram:
