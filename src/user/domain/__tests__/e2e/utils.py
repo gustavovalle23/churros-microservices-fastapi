@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi.testclient import TestClient
 
 from src.user.domain.__tests__.e2e.mocks.user import users
-from src.infra.database import UserModel, engine
+from src.database.models import UserModel, engine
 
 
 class UserSeed:

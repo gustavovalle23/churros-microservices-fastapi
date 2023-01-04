@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 import uvicorn
 
-from src.infra.database import Base, engine
+from src.database.models import Base, engine
 from src.api.routers.user import router
 
 Base.metadata.create_all(bind=engine)

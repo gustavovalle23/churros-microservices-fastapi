@@ -9,7 +9,7 @@ from sqlalchemy.sql.expression import true
 
 from src.user.domain.entities import User
 from src.user.domain.factories import UserFactory
-from src.infra.database import UserModel
+from src.database.models import UserModel
 from src.api.routers.dtos.user import CreateUserInput, UpdateUserInput
 
 
