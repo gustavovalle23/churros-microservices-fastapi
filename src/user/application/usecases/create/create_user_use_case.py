@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import bcrypt
 from dataclasses import dataclass
 from sqlalchemy.orm import Session
 

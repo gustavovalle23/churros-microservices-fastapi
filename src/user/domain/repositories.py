@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from abc import ABC, abstractmethod
-from typing import Tuple
+from typing import Tuple, Any
 
 from src.user.domain.entities import User
 
@@ -14,7 +14,7 @@ class UserRepository(ABC):
         pass
 
     @abstractmethod
-    def find_by_email(self, email: str) -> User | None:
+    def find_by_email(self, db: Any, email: str) -> User | None:
         """
         Method responsable for find user by email
         """

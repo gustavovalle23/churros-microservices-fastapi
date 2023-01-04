@@ -8,7 +8,9 @@ from fastapi.security import OAuth2PasswordRequestForm as OAuthForm
 
 from src.user.domain.entities import User
 from src.database.models import get_db
-from src.api.routers.errors import UserNotFound, EmailAlreadyRegistered
+from src.api.routers.errors import (
+    UserNotFound, EmailAlreadyRegistered, IncorrectUsernameOrPassword
+)
 from src.api.routers.dtos.user import CreateUserInput, UpdateUserInput, Token
 from src.user.infra.gateways.jwt import (
     authenticate_user,
@@ -87,11 +89,8 @@ async def delete_user(
 async def login(form_data: OAuthForm = Depends(), db: Session = Depends(get_db)):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        return IncorrectUsernameOrPassword()
+
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
