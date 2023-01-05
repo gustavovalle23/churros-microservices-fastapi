@@ -9,12 +9,14 @@ from sqlalchemy.sql.expression import true
 
 from src.user.domain.entities import User
 from src.user.domain.factories import UserFactory
-from src.database.models import UserModel
+from src.database.models import UserModel, db_session
 from src.api.routers.dtos.user import CreateUserInput, UpdateUserInput
 
 
 class UserSqlachemyRepository:
-    def find_all(self, db: Session, skip: int = 0, limit: int = 100) -> Tuple[User]:
+    def find_all(self, skip: int = 0, limit: int = 100) -> Tuple[User]:
+
+        db = db_session.get()
 
         users = (
             db.query(UserModel)

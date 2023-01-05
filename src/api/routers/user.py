@@ -16,7 +16,7 @@ from src.user.infra.gateways.jwt import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     create_access_token,
 )
-from src.database.models import get_db
+from src.database.models import get_db, db_session
 from src.user.domain.entities import User
 from src.user.domain.repositories import UserRepository
 from src.user.infra.gateways.auth import get_current_active_user
@@ -41,8 +41,9 @@ find_users_use_case = FindUsersUseCase(user_repository)
 
 @router.get("/users", tags=["users"])
 async def find_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    db_session.set(db)
     input_use_case = FindUsersInput(skip=skip, limit=limit)
-    users = find_users_use_case.execute(input_use_case, db)
+    users = find_users_use_case.execute(input_use_case)
     return {"users": users.users}
 
 

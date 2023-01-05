@@ -28,7 +28,7 @@ class FindUserUseCase(UseCase):
 
     user_repository: UserRepository
 
-    def execute(self, input: Input, db: Session) -> Output:
+    def execute(self, input: Input, db) -> Output:
         user: Optional[User] = self.user_repository.find_by_id(db, input.id)
 
         if not user:

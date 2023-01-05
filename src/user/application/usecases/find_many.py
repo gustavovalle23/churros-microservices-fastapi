@@ -30,8 +30,8 @@ class FindUsersUseCase(UseCase):
 
     user_repository: UserRepository
 
-    def execute(self, input: Input, db: Session) -> Output:
-        users = self.user_repository.find_all(db, input.skip, input.limit)
+    def execute(self, input: Input) -> Output:
+        users = self.user_repository.find_all(input.skip, input.limit)
         outputs = [
             FindUsersOutput(user.name, user.email, user.activate) for user in users
         ]
