@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from kink import di
 from datetime import timedelta
-from typing import Tuple, Optional
+from typing import Optional
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm as OAuthForm
@@ -49,14 +49,16 @@ async def find_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_d
 
 @router.get("/users/{user_id}", tags=["users"])
 async def find_user(user_id: int, db: Session = Depends(get_db)):
+    db_session.set(db)
     input_use_case = FindUserInput(id=user_id)
-    user = find_user_use_case.execute(input_use_case, db)
+    user = find_user_use_case.execute(input_use_case)
     return {"user": user}
 
 
 @router.post("/users", tags=["users"], status_code=status.HTTP_201_CREATED)
 async def create_user(user: CreateUserInput, db: Session = Depends(get_db)):
-    user_created = create_user_use_case.execute(user, db)
+    db_session.set(db)
+    user_created = create_user_use_case.execute(user)
     return {"user": user_created}
 
 
@@ -64,7 +66,9 @@ async def create_user(user: CreateUserInput, db: Session = Depends(get_db)):
 async def inactivate_user(
     db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)
 ):
-    user: Optional[User] = user_repository.find_by_id(db, current_user.id)
+    db_session.set(db)
+
+    user: Optional[User] = user_repository.find_by_id(current_user.id)
     if not user:
         return UserNotFound()
 
@@ -74,14 +78,16 @@ async def inactivate_user(
 
 @router.patch("/users", tags=["users"])
 async def update_user(input: UpdateUserInput, db: Session = Depends(get_db)):
-    user: Optional[User] = user_repository.find_by_id(db, input.id)
+    db_session.set(db)
+
+    user: Optional[User] = user_repository.find_by_id(input.id)
     if not user:
         return UserNotFound()
 
-    if user_repository.find_by_email(db, input.email):
+    if user_repository.find_by_email(input.email):
         return EmailAlreadyRegistered()
 
-    updated_user = user_repository.update(db, input)
+    updated_user = user_repository.update(input)
     return {"message": "updated", "user": updated_user}
 
 
@@ -90,17 +96,21 @@ async def delete_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
-    user: Optional[User] = user_repository.find_by_id(db, current_user.id)
+    db_session.set(db)
+
+    user: Optional[User] = user_repository.find_by_id(current_user.id)
     if not user:
         return UserNotFound()
 
-    user_repository.delete(db, current_user.id)
+    user_repository.delete(current_user.id)
     return {"message": "deleted"}
 
 
 @router.post("/token", response_model=Token, tags=["users"])
 async def login(form_data: OAuthForm = Depends(), db: Session = Depends(get_db)):
-    user = authenticate_user(db, form_data.username, form_data.password)
+    db_session.set(db)
+
+    user = authenticate_user(form_data.username, form_data.password)
     if not user:
         return IncorrectUsernameOrPassword()
 

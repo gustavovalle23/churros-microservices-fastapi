@@ -14,14 +14,14 @@ class UserRepository(ABC):
         pass
 
     @abstractmethod
-    def find_by_email(self, db: Any, email: str) -> User | None:
+    def find_by_email(self, email: str) -> User | None:
         """
         Method responsable for find user by email
         """
         pass
 
     @abstractmethod
-    def find_by_id(self, db: Any, user_id: int) -> User | None:
+    def find_by_id(self, user_id: int) -> User | None:
         """
         Method responsable for find user by email
         """

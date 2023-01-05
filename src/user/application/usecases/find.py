@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from typing import Optional
 from dataclasses import dataclass
-from sqlalchemy.orm import Session
 
 from src.user.domain.entities import User
 from src.user.domain.repositories import UserRepository
@@ -28,8 +27,8 @@ class FindUserUseCase(UseCase):
 
     user_repository: UserRepository
 
-    def execute(self, input: Input, db) -> Output:
-        user: Optional[User] = self.user_repository.find_by_id(db, input.id)
+    def execute(self, input: Input) -> Output:
+        user: Optional[User] = self.user_repository.find_by_id(input.id)
 
         if not user:
             return UserNotFound()
