@@ -7,7 +7,7 @@ from src.user.domain.entities import User
 
 class UserRepository(ABC):
     @abstractmethod
-    def find_all(self, skip: int = 0, limit: int = 100) -> Tuple[User]:
+    def find_all(self, db: Any, skip: int = 0, limit: int = 100) -> Tuple[User]:
         """
         Method responsable for find all users considering pagination
         """
@@ -21,7 +21,7 @@ class UserRepository(ABC):
         pass
 
     @abstractmethod
-    def find_by_id(self, user_id: int) -> User | None:
+    def find_by_id(self, db: Any, user_id: int) -> User | None:
         """
         Method responsable for find user by email
         """

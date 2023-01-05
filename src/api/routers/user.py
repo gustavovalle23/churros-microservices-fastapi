@@ -23,28 +23,33 @@ from src.user.infra.gateways.auth import get_current_active_user
 from src.api.routers.dtos.user import (
     CreateUserInput,
     FindUserInput,
+    FindUsersInput,
     UpdateUserInput,
     Token,
 )
 from src.user.application.usecases.create import CreateUserUseCase
 from src.user.application.usecases.find import FindUserUseCase
+from src.user.application.usecases.find_many import FindUsersUseCase
 
 router = APIRouter()
 
 user_repository: UserRepository = di[UserRepository]
 create_user_use_case = CreateUserUseCase(user_repository)
 find_user_use_case = FindUserUseCase(user_repository)
+find_users_use_case = FindUsersUseCase(user_repository)
 
 
 @router.get("/users", tags=["users"])
 async def find_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    users: Tuple[User] = user_repository.find_all(db, skip, limit)
-    return {"users": users}
+    input_use_case = FindUsersInput(skip=skip, limit=limit)
+    users = find_users_use_case.execute(input_use_case, db)
+    return {"users": users.users}
 
 
 @router.get("/users/{user_id}", tags=["users"])
-async def find_user(args: FindUserInput, db: Session = Depends(get_db)):
-    user = find_user_use_case.execute(args, db)
+async def find_user(user_id: int, db: Session = Depends(get_db)):
+    input_use_case = FindUserInput(id=user_id)
+    user = find_user_use_case.execute(input_use_case, db)
     return {"user": user}
 
 

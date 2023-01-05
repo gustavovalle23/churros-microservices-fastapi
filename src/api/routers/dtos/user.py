@@ -25,8 +25,15 @@ class CreateUserInput(BaseModel):
 
 
 class FindUserInput(BaseModel):
-    email: Optional[str]
-    id: Optional[int]
+    id: int
+
+    class Config:
+        validate_assignment = True
+
+
+class FindUsersInput(BaseModel):
+    limit: int
+    skip: int
 
     class Config:
         validate_assignment = True
