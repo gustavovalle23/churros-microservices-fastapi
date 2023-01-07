@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from typing import Tuple
+from typing import Tuple, Optional
 from dataclasses import dataclass
-from sqlalchemy.orm import Session
 
 from src.user.domain.repositories import UserRepository
 from src.__seedwork.application.use_cases import UseCase
@@ -29,9 +28,14 @@ class Output:
 class FindUsersUseCase(UseCase):
 
     user_repository: UserRepository
+    input: Optional[Input] = None
 
-    def execute(self, input: Input) -> Output:
-        users = self.user_repository.find_all(input.skip, input.limit)
+    def prepare_input(self, skip: int, limit: int) -> 'FindUsersUseCase':
+        object.__setattr__(self, "input", Input(skip, limit))
+        return self
+
+    def execute(self) -> Output:
+        users = self.user_repository.find_all(self.input.skip, self.input.limit)
         outputs = [
             FindUsersOutput(user.name, user.email, user.activate) for user in users
         ]

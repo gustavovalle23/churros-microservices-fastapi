@@ -2,9 +2,9 @@
 import uvicorn
 from fastapi import FastAPI
 
-from src.core.database.models import Base, engine
 from src.api.routers.user import router
-from src.api.resolvers.user import graphql_app
+from src.api.resolvers.schema import graphql_app
+from src.core.database.models import Base, engine
 
 
 Base.metadata.create_all(bind=engine)

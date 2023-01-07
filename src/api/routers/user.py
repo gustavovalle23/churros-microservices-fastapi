@@ -41,8 +41,7 @@ login_user_use_case = LoginUserUseCase(user_repository)
 @router.get("/users", tags=["users"])
 async def find_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     db_session.set(db)
-    input_use_case = FindUsersInput(skip=skip, limit=limit)
-    users = find_users_use_case.execute(input_use_case)
+    users = find_users_use_case.prepare_input(skip, limit).execute()
     return {"users": users.users}
 
 
