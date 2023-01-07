@@ -9,7 +9,7 @@ from sqlalchemy.sql.expression import true
 
 from src.user.domain.entities import User
 from src.user.domain.factories import UserFactory
-from src.database.models import UserModel, db_session
+from src.core.database.models import UserModel, db_session
 from src.api.routers.dtos.user import CreateUserInput, UpdateUserInput
 
 
@@ -75,7 +75,8 @@ class UserSqlachemyRepository:
         )
         return UserFactory.create(updated_user)
 
-    def inactivate(self, db: Session, user_id: int) -> None:
+    def inactivate(self, user_id: int) -> None:
+        db = db_session.get()
         db.query(UserModel).filter(UserModel.id == user_id).update({"active": False})
         db.commit()
 

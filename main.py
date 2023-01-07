@@ -2,7 +2,7 @@
 import uvicorn
 from fastapi import FastAPI
 
-from src.database.models import Base, engine
+from src.core.database.models import Base, engine
 from src.api.routers.user import router
 from src.api.resolvers.user import graphql_app
 
