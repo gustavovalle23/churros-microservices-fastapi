@@ -30,8 +30,8 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-def authenticate_user(db: Session, username: str, password: str):
-    user = user_repository.find_by_email(db, username)
+def authenticate_user(username: str, password: str):
+    user = user_repository.find_by_email(username)
     if not user or not pwd_context.verify(password, user.password):
         return False
     return user

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+from contextvars import ContextVar
 from datetime import datetime
 from sqlalchemy.sql import func
 from dotenv import dotenv_values
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, Boolean, DateTime, Integer
 
@@ -18,8 +19,13 @@ def get_db():
     db = SessionLocal()
     try:
         yield db
+        db.commit()
+    except Exception:
+        db.rollback()
     finally:
         db.close()
+
+db_session: ContextVar[Session] = ContextVar('db_session')
 
 
 class UserModel(Base):

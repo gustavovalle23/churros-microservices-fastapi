@@ -30,15 +30,10 @@ class EmailAlreadyRegistered:
         )
 
 
-class InvalidEmailPasswordMatch:
+class IncorrectUsernameOrPassword:
     def __init__(self) -> None:
         raise HTTPException(
-            status.HTTP_401_UNAUTHORIZED,
-            [
-                {
-                    "loc": ["param", "password"],
-                    "msg": "Invalid Credentials",
-                    "type": "invalid_credentials",
-                }
-            ],
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
         )
