@@ -1,5 +1,5 @@
-import ujson
 from abc import ABC
+import orjson as json
 from dataclasses import dataclass, fields
 
 
@@ -12,4 +12,4 @@ class ValueObject(ABC):
             return str(getattr(self, fields_name[0]))
 
         response = {field: getattr(self, field) for field in fields_name}
-        return ujson.dumps(response)
+        return json.dumps(response)
