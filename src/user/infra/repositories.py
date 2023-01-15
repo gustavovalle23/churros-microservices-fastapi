@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import json
+import ujson
 import bcrypt
 import random
 import string
 from typing import Tuple
-from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import true
 
 from src.user.domain.entities import User
@@ -54,7 +53,7 @@ class UserSqlachemyRepository:
 
         input.password = bcrypt.hashpw(input.password.encode(), bcrypt.gensalt())
 
-        user = UserModel(**json.loads(input.json()))
+        user = UserModel(**ujson.loads(input.json()))
         db.add(user)
         db.commit()
 
@@ -64,7 +63,7 @@ class UserSqlachemyRepository:
         db = db_session.get()
 
         user_id = update_user_input.id
-        data: dict = json.loads(update_user_input.json())
+        data: dict = ujson.loads(update_user_input.json())
         data = {k: v for k, v in data.items() if v is not None and k != "id"}
 
         db.query(UserModel).filter(UserModel.id == user_id).update(data)

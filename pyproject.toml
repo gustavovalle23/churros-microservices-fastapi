@@ -23,6 +23,7 @@ flake8 = "^6.0.0"
 black = "^22.12.0"
 mypy = "^0.991"
 strawberry-graphql = {extras = ["fastapi"], version = "^0.151.2"}
+ujson = "^5.7.0"
 
 [tool.poetry.dev-dependencies]
 

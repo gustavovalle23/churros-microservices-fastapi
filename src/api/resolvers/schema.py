@@ -22,7 +22,6 @@ from src.api.resolvers.graphql.user_types import User
 
 class SQLAlchemySession(Extension):
     def on_request_start(self):
-        print('aqui', self.execution_context.context)
         self.execution_context.context["db_session"] = SessionLocal()
 
     def on_request_end(self):
