@@ -7,7 +7,7 @@ from strawberry.types.info import Info
 from sqlalchemy.orm.session import Session
 
 from src.core.database.models import db_session, SessionLocal
-from src.user.application.usecases import (
+from src.user.usecases import (
     CreateUserUseCase,
     FindUserUseCase,
     UpdateUserUseCase,

@@ -11,11 +11,10 @@ from src.user.infra.gateways.auth import get_current_active_user
 from src.api.routers.dtos.user import (
     CreateUserInput,
     FindUserInput,
-    FindUsersInput,
     UpdateUserInput,
     Token,
 )
-from src.user.application.usecases import (
+from src.user.usecases import (
     CreateUserUseCase,
     FindUserUseCase,
     UpdateUserUseCase,

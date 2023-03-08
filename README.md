@@ -30,19 +30,18 @@ cd user-microservice-python
 
 ### Initialization of the virtual environment
 ```
-pdm istall
+poetry install
 ```
 
 ### Start the local server (will be available at http://127.0.0.1:8000 or localhost:8000)
 ```
 cp .env.example .env
-pdm run python main.py
+poetry run python main.py
 ```
 
 ### Run tests
 ```
-pdm run pytest -vv -s
+poetry run python -m pytest -vv -s
 ```
 
 ### Access docs at http://localhost:8000/docs or http://localhost:8000/redoc
-

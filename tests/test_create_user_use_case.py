@@ -2,7 +2,7 @@
 from unittest import TestCase
 
 from src.__seedwork.application.use_cases import UseCase
-from src.user.application.usecases.create import CreateUserUseCase
+from src.user.usecases.create import CreateUserUseCase
 from src.user.infra.repositories import UserSqlachemyRepository
 
 
