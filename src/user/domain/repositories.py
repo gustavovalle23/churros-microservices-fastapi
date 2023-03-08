@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from abc import ABC, abstractmethod
-from typing import Tuple
+from typing import Tuple, Any
 
 from src.user.domain.entities import User
 

@@ -1,5 +1,5 @@
-import json
 from abc import ABC
+import orjson as json
 from dataclasses import dataclass, fields
 
 
