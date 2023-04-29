@@ -6,6 +6,21 @@ from typing import Any, Dict, List, TypeVar, Generic, Optional
 from src.__seedwork.domain.exceptions import ValidationException
 
 
+ErrorFields = Dict[str, List[str]]
+
+PropsValidated = TypeVar("PropsValidated")
+
+
+@dataclass
+class ValidatorFieldsInterface(ABC, Generic[PropsValidated]):
+    errors: ErrorFields = {}
+    validated_data: Optional[PropsValidated] = None
+
+    @abc.abstractmethod
+    def validate(self, data: Any) -> bool:
+        raise NotImplementedError()
+
+
 @dataclass(frozen=True)
 class ValidatorRules:
     value: Any
@@ -40,18 +55,3 @@ class ValidatorRules:
         ):
             raise ValidationException(f"The {self.prop} must be a boolean")
         return self
-
-
-ErrorFields = Dict[str, List[str]]
-
-PropsValidated = TypeVar("PropsValidated")
-
-
-@dataclass
-class ValidatorFieldsInterface(ABC, Generic[PropsValidated]):
-    errors: ErrorFields = {}
-    validated_data: Optional[PropsValidated] = None
-
-    @abc.abstractmethod
-    def validate(self, data: Any) -> bool:
-        raise NotImplementedError()
