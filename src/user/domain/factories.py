@@ -1,5 +1,3 @@
-from typing import Any
-
 from src.user.domain.validators import UserValidator
 from src.user.domain.entities import User
 

@@ -31,6 +31,6 @@ class FindUserUseCase(UseCase):
         user: Optional[User] = self.user_repository.find_by_id(input.id)
 
         if not user:
-            return UserNotFound()
+            raise UserNotFound._raise()
 
         return Output(user.name, user.email, user.active)

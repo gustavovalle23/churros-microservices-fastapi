@@ -34,10 +34,10 @@ class UpdateUserUseCase(UseCase):
     def execute(self, input: Input) -> Output:
         user: Optional[User] = self.user_repository.find_by_id(input.id)
         if not user:
-            return UserNotFound()
+            raise UserNotFound._raise()
 
         if self.user_repository.find_by_email(input.email):
-            return EmailAlreadyRegistered()
+            raise EmailAlreadyRegistered._raise()
 
         updated_user = self.user_repository.update(input)
 

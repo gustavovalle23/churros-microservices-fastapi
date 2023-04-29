@@ -3,8 +3,9 @@ from fastapi import status, HTTPException
 
 
 class UserNotFound:
-    def __init__(self) -> None:
-        raise HTTPException(
+    @staticmethod
+    def _raise() -> HTTPException:
+        return HTTPException(
             status.HTTP_404_NOT_FOUND,
             [
                 {
@@ -17,8 +18,9 @@ class UserNotFound:
 
 
 class EmailAlreadyRegistered:
-    def __init__(self) -> None:
-        raise HTTPException(
+    @staticmethod
+    def _raise() -> HTTPException:
+        return HTTPException(
             status.HTTP_412_PRECONDITION_FAILED,
             [
                 {

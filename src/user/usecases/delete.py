@@ -23,6 +23,6 @@ class DeleteUserUseCase(UseCase):
     def execute(self, input: Input) -> None:
         user: Optional[User] = self.user_repository.find_by_id(input.id)
         if not user:
-            return UserNotFound()
+            raise UserNotFound._raise()
 
         self.user_repository.delete(input.id)

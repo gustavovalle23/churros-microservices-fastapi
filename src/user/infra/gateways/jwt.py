@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from dotenv import dotenv_values
+from typing import Optional
 from jose import jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 
 from src.user.infra.repositories import UserSqlachemyRepository
+from src.core.database.models import UserModel
 
 user_repository = UserSqlachemyRepository()
 
@@ -30,8 +32,8 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-def authenticate_user(username: str, password: str):
+def authenticate_user(username: str, password: str) -> Optional[UserModel]:
     user = user_repository.find_by_email(username)
     if not user or not pwd_context.verify(password, user.password):
-        return False
+        return
     return user
