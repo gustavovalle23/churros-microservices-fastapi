@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from app.api.routers.errors import (
     IncorrectUsernameOrPassword,
 )
-from app.user.domain.repositories import UserRepository
+from app.user.domain.contracts.repositories import UserRepository
 from app.__seedwork.application.use_cases import UseCase
 from app.user.infra.gateways.jwt import (
     authenticate_user,

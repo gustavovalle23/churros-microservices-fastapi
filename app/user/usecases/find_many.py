@@ -2,7 +2,7 @@
 from typing import Tuple, Optional
 from dataclasses import dataclass
 
-from app.user.domain.repositories import UserRepository
+from app.user.domain.contracts.repositories import UserRepository
 from app.__seedwork.application.use_cases import UseCase
 
 

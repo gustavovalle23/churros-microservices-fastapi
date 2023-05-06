@@ -16,7 +16,8 @@ from app.user.usecases import (
     DeleteUserUseCase,
     LoginUserUseCase,
 )
-from app.user.domain.repositories import UserRepository
+from app.user.domain.contracts.repositories import UserRepository
+from app.user.domain.contracts.gateways import SyncCloud
 from app.api.resolvers.graphql.user_types import User
 
 
@@ -29,7 +30,9 @@ class SQLAlchemySession(Extension):
 
 
 user_repository: UserRepository = di[UserRepository]
-create_user_use_case = CreateUserUseCase(user_repository)
+sync_cloud: SyncCloud = di[SyncCloud]
+
+create_user_use_case = CreateUserUseCase(user_repository, sync_cloud)
 find_user_use_case = FindUserUseCase(user_repository)
 find_users_use_case = FindUsersUseCase(user_repository)
 inactivate_user_use_case = InactivateUserUseCase(user_repository)

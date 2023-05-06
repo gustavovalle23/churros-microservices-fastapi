@@ -11,46 +11,46 @@ class UserRepository(ABC):
         """
         Method responsable for find all users considering pagination
         """
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def find_by_email(self, email: str) -> User | None:
         """
         Method responsable for find user by email
         """
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def find_by_id(self, user_id: int) -> User | None:
         """
         Method responsable for find user by email
         """
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def save(self, input_repository) -> User:
         """
         Method responsable for save user
         """
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def update(self, input_repository) -> User:
         """
         Method responsable for update user
         """
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def inactivate(self, user_id: int) -> None:
         """
         Method responsable for inactive user
         """
-        pass
+        raise NotImplementedError()
 
     @abstractmethod
     def delete(self, user_id: int) -> None:
         """
         Method responsable for delete user
         """
-        pass
+        raise NotImplementedError()

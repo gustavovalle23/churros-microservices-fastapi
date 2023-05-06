@@ -6,7 +6,8 @@ from fastapi.security import OAuth2PasswordRequestForm as OAuthForm
 
 from app.core.database.models import get_db, db_session
 from app.user.domain.entities import User
-from app.user.domain.repositories import UserRepository
+from app.user.domain.contracts.repositories import UserRepository
+from app.user.domain.contracts.gateways import SyncCloud
 from app.user.infra.gateways.auth import get_current_active_user
 from app.api.routers.dtos.user import (
     CreateUserInput,
@@ -27,8 +28,11 @@ from app.user.usecases import (
 
 router = APIRouter()
 
+
 user_repository: UserRepository = di[UserRepository]
-create_user_use_case = CreateUserUseCase(user_repository)
+sync_cloud: SyncCloud = di[SyncCloud]
+
+create_user_use_case = CreateUserUseCase(user_repository, sync_cloud)
 find_user_use_case = FindUserUseCase(user_repository)
 find_users_use_case = FindUsersUseCase(user_repository)
 inactivate_user_use_case = InactivateUserUseCase(user_repository)
