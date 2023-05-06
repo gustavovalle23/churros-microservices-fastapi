@@ -4,7 +4,7 @@ from typing import Mapping
 from fastapi.testclient import TestClient
 
 from main import app
-from src.bootstrap import bootstrap_di
+from app.bootstrap import bootstrap_di
 from tests.utils.mocks.user import users
 from tests.utils.utils import UserSeed, Sqlite3, generate_token_user
 

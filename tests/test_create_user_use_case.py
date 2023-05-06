@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from unittest import TestCase
 
-from src.__seedwork.application.use_cases import UseCase
-from src.user.usecases.create import CreateUserUseCase
-from src.user.infra.repositories import UserSqlachemyRepository
+from app.__seedwork.application.use_cases import UseCase
+from app.user.usecases.create import CreateUserUseCase
+from app.user.infra.repositories import UserSqlachemyRepository
 
 
 class TestCreateUserUseCaseUnit(TestCase):
